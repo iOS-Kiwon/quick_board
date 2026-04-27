@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎲 보드게임 점수판</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100dvh;
+      background: #0d0d0d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Rajdhani', sans-serif;
+      padding: 24px;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #e8d5a0;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #7a6a4a;
+      letter-spacing: 1px;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+
+    .game-list {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .game-card {
+      width: 200px;
+      border-radius: 14px;
+      padding: 32px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .game-card.skulking {
+      background: #1a1508;
+      border: 1.5px solid #4a3a10;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .game-card.skulking:hover {
+      box-shadow: 0 8px 28px rgba(200,160,40,0.2);
+      border-color: #c8a028;
+    }
+
+    .game-card.yacht {
+      background: #140a0a;
+      border: 1.5px solid #2a1010;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .game-card.yacht:hover {
+      box-shadow: 0 8px 28px rgba(200,40,40,0.2);
+      border-color: #cc2222;
+    }
+
+    .game-icon {
+      font-size: 2.8rem;
+      line-height: 1;
+    }
+
+    .game-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      letter-spacing: 1.5px;
+    }
+
+    .game-card.skulking .game-name { color: #e8d5a0; }
+    .game-card.yacht   .game-name { color: #ff4444; }
+
+    .game-desc {
+      font-size: 0.8rem;
+      color: #6a6a6a;
+      text-align: center;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎲 보드게임 점수판</h1>
+  <p class="subtitle">Board Game Score Tracker</p>
+
+  <div class="game-list">
+    <a class="game-card skulking" href="games/skulking/">
+      <div class="game-icon">☠️</div>
+      <div class="game-name">스컬킹</div>
+      <div class="game-desc">Skull King<br>2~8명 · 10라운드</div>
+    </a>
+
+    <a class="game-card yacht" href="games/yacht/">
+      <div class="game-icon">🎲</div>
+      <div class="game-name">요트 다이스</div>
+      <div class="game-desc">Yacht Dice<br>2~8명 · 12카테고리</div>
+    </a>
+  </div>
+</body>
+</html>

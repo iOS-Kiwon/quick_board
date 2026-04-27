@@ -1,0 +1,60 @@
+{
+  "@@locale": "ko",
+  "appName": "스컬킹 점수판",
+  "setupTitle": "게임 설정",
+  "playerCount": "플레이어 수",
+  "playerName": "플레이어 {n} 이름",
+  "@playerName": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "startGame": "⚓ 게임 시작",
+  "predictedWins": "예측승",
+  "actualWins": "획득승",
+  "bonus": "보너스",
+  "roundScore": "점수",
+  "nextRound": "다음 라운드 ▶",
+  "endGame": "🏁 게임 종료",
+  "tricksTotal": "획득승 합계: {sum} / {round}",
+  "@tricksTotal": {
+    "placeholders": {
+      "sum": { "type": "int" },
+      "round": { "type": "int" }
+    }
+  },
+  "tricksMismatch": "합계가 라운드 수와 맞지 않습니다",
+  "tricksOk": "✓",
+  "finalResult": "🏆 최종 결과",
+  "shareResult": "📋 결과 공유",
+  "playAgain": "🔄 다시 하기",
+  "shareHeader": "☠️ 스컬킹 게임 결과 ☠️",
+  "shareFinalStandings": "[ 최종 순위 ]",
+  "shareRoundScores": "[ 라운드별 점수 ]",
+  "shareTotal": "합계",
+  "roundLabel": "{round} / 10",
+  "@roundLabel": {
+    "placeholders": {
+      "round": { "type": "int" }
+    }
+  },
+  "cumulativeScore": "📊 누적 총점",
+  "roundPrefix": "R{round}",
+  "@roundPrefix": {
+    "placeholders": {
+      "round": { "type": "int" }
+    }
+  },
+  "rankLabel": "{rank}위",
+  "@rankLabel": {
+    "placeholders": {
+      "rank": { "type": "int" }
+    }
+  },
+  "pointsSuffix": "{score}점",
+  "@pointsSuffix": {
+    "placeholders": {
+      "score": { "type": "String" }
+    }
+  }
+}

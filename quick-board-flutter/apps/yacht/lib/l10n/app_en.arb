@@ -1,0 +1,106 @@
+{
+  "@@locale": "en",
+  "appName": "Yacht Dice",
+  "@appName": {},
+  "setupTitle": "Game Setup",
+  "@setupTitle": {},
+  "playerCount": "Players",
+  "@playerCount": {},
+  "playerName": "Player {n} name",
+  "@playerName": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "startGame": "🎲 Start Game",
+  "@startGame": {},
+  "endGame": "🏁 End Game",
+  "@endGame": {},
+  "progressLabel": "{filled}/{total} categories filled",
+  "@progressLabel": {
+    "placeholders": {
+      "filled": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "headerCategory": "Category",
+  "@headerCategory": {},
+  "upperSubtotal": "Subtotal",
+  "@upperSubtotal": {},
+  "bonusLabel": "Bonus (+35)",
+  "@bonusLabel": {},
+  "totalScore": "Total",
+  "@totalScore": {},
+  "catAces": "Aces",
+  "@catAces": {},
+  "catDuals": "Duals",
+  "@catDuals": {},
+  "catTriples": "Triples",
+  "@catTriples": {},
+  "catQuads": "Quads",
+  "@catQuads": {},
+  "catPenta": "Penta",
+  "@catPenta": {},
+  "catHexa": "Hexa",
+  "@catHexa": {},
+  "catChoice": "Choice",
+  "@catChoice": {},
+  "catPoker": "Poker",
+  "@catPoker": {},
+  "catFullHouse": "Full House",
+  "@catFullHouse": {},
+  "catSmallStraight": "Small Straight",
+  "@catSmallStraight": {},
+  "catLargeStraight": "Large Straight",
+  "@catLargeStraight": {},
+  "catYacht": "Yacht",
+  "@catYacht": {},
+  "maxScoreHint": "Max {max} pts",
+  "@maxScoreHint": {
+    "placeholders": {
+      "max": { "type": "int" }
+    }
+  },
+  "autoConverted": "Will be auto-converted to {max} pts",
+  "@autoConverted": {
+    "placeholders": {
+      "max": { "type": "int" }
+    }
+  },
+  "confirmButton": "Confirm",
+  "@confirmButton": {},
+  "cancelButton": "Cancel",
+  "@cancelButton": {},
+  "scoreInputHint": "Enter score",
+  "@scoreInputHint": {},
+  "finalResult": "🏆 Final Results",
+  "@finalResult": {},
+  "shareResult": "📋 Share Results",
+  "@shareResult": {},
+  "playAgain": "🔄 Play Again",
+  "@playAgain": {},
+  "rankLabel": "#{rank}",
+  "@rankLabel": {
+    "placeholders": {
+      "rank": { "type": "int" }
+    }
+  },
+  "pointsSuffix": "{score} pts",
+  "@pointsSuffix": {
+    "placeholders": {
+      "score": { "type": "String" }
+    }
+  },
+  "shareHeader": "🎲 Yacht Dice Results 🎲",
+  "@shareHeader": {},
+  "shareFinalStandings": "[ Final Standings ]",
+  "@shareFinalStandings": {},
+  "shareRoundScores": "[ Category Scores ]",
+  "@shareRoundScores": {},
+  "shareUpperSubtotal": "Upper Subtotal",
+  "@shareUpperSubtotal": {},
+  "shareBonus": "Bonus",
+  "@shareBonus": {},
+  "shareTotal": "Total",
+  "@shareTotal": {}
+}

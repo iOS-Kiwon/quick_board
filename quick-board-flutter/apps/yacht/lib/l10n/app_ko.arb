@@ -1,0 +1,106 @@
+{
+  "@@locale": "ko",
+  "appName": "요트 다이스",
+  "@appName": {},
+  "setupTitle": "게임 설정",
+  "@setupTitle": {},
+  "playerCount": "플레이어 수",
+  "@playerCount": {},
+  "playerName": "플레이어 {n} 이름",
+  "@playerName": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "startGame": "🎲 게임 시작",
+  "@startGame": {},
+  "endGame": "🏁 게임 종료",
+  "@endGame": {},
+  "progressLabel": "{filled}/{total} 카테고리 입력됨",
+  "@progressLabel": {
+    "placeholders": {
+      "filled": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "headerCategory": "카테고리",
+  "@headerCategory": {},
+  "upperSubtotal": "소계",
+  "@upperSubtotal": {},
+  "bonusLabel": "보너스 (+35)",
+  "@bonusLabel": {},
+  "totalScore": "총점",
+  "@totalScore": {},
+  "catAces": "에이스",
+  "@catAces": {},
+  "catDuals": "듀얼",
+  "@catDuals": {},
+  "catTriples": "트리플",
+  "@catTriples": {},
+  "catQuads": "쿼드",
+  "@catQuads": {},
+  "catPenta": "펜타",
+  "@catPenta": {},
+  "catHexa": "헥사",
+  "@catHexa": {},
+  "catChoice": "초이스",
+  "@catChoice": {},
+  "catPoker": "포커",
+  "@catPoker": {},
+  "catFullHouse": "풀하우스",
+  "@catFullHouse": {},
+  "catSmallStraight": "스몰 스트레이트",
+  "@catSmallStraight": {},
+  "catLargeStraight": "라지 스트레이트",
+  "@catLargeStraight": {},
+  "catYacht": "요트",
+  "@catYacht": {},
+  "maxScoreHint": "최대 {max}점",
+  "@maxScoreHint": {
+    "placeholders": {
+      "max": { "type": "int" }
+    }
+  },
+  "autoConverted": "{max}점으로 자동 변환됩니다",
+  "@autoConverted": {
+    "placeholders": {
+      "max": { "type": "int" }
+    }
+  },
+  "confirmButton": "확인",
+  "@confirmButton": {},
+  "cancelButton": "취소",
+  "@cancelButton": {},
+  "scoreInputHint": "점수 입력",
+  "@scoreInputHint": {},
+  "finalResult": "🏆 최종 결과",
+  "@finalResult": {},
+  "shareResult": "📋 결과 공유",
+  "@shareResult": {},
+  "playAgain": "🔄 다시 하기",
+  "@playAgain": {},
+  "rankLabel": "{rank}위",
+  "@rankLabel": {
+    "placeholders": {
+      "rank": { "type": "int" }
+    }
+  },
+  "pointsSuffix": "{score}점",
+  "@pointsSuffix": {
+    "placeholders": {
+      "score": { "type": "String" }
+    }
+  },
+  "shareHeader": "🎲 요트 다이스 게임 결과 🎲",
+  "@shareHeader": {},
+  "shareFinalStandings": "[ 최종 순위 ]",
+  "@shareFinalStandings": {},
+  "shareRoundScores": "[ 카테고리별 점수 ]",
+  "@shareRoundScores": {},
+  "shareUpperSubtotal": "상단 소계",
+  "@shareUpperSubtotal": {},
+  "shareBonus": "보너스",
+  "@shareBonus": {},
+  "shareTotal": "합계",
+  "@shareTotal": {}
+}

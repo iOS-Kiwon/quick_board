@@ -1,0 +1,60 @@
+{
+  "@@locale": "en",
+  "appName": "Skull King Score",
+  "setupTitle": "Game Setup",
+  "playerCount": "Number of Players",
+  "playerName": "Player {n} Name",
+  "@playerName": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "startGame": "⚓ Start Game",
+  "predictedWins": "Bid",
+  "actualWins": "Tricks",
+  "bonus": "Bonus",
+  "roundScore": "Score",
+  "nextRound": "Next Round ▶",
+  "endGame": "🏁 End Game",
+  "tricksTotal": "Tricks total: {sum} / {round}",
+  "@tricksTotal": {
+    "placeholders": {
+      "sum": { "type": "int" },
+      "round": { "type": "int" }
+    }
+  },
+  "tricksMismatch": "Total must equal the round number",
+  "tricksOk": "✓",
+  "finalResult": "🏆 Final Results",
+  "shareResult": "📋 Share Results",
+  "playAgain": "🔄 Play Again",
+  "shareHeader": "☠️ Skull King Results ☠️",
+  "shareFinalStandings": "[ Final Standings ]",
+  "shareRoundScores": "[ Round Scores ]",
+  "shareTotal": "Total",
+  "roundLabel": "{round} / 10",
+  "@roundLabel": {
+    "placeholders": {
+      "round": { "type": "int" }
+    }
+  },
+  "cumulativeScore": "📊 Cumulative Score",
+  "roundPrefix": "R{round}",
+  "@roundPrefix": {
+    "placeholders": {
+      "round": { "type": "int" }
+    }
+  },
+  "rankLabel": "{rank}th",
+  "@rankLabel": {
+    "placeholders": {
+      "rank": { "type": "int" }
+    }
+  },
+  "pointsSuffix": "{score}pts",
+  "@pointsSuffix": {
+    "placeholders": {
+      "score": { "type": "String" }
+    }
+  }
+}
