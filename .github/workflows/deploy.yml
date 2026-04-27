@@ -1,0 +1,64 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.0'
+          channel: stable
+
+      - name: Install dependencies (skulking)
+        run: flutter pub get
+        working-directory: quick-board-flutter/apps/skulking
+
+      - name: Install dependencies (yacht)
+        run: flutter pub get
+        working-directory: quick-board-flutter/apps/yacht
+
+      - name: Build skulking
+        run: flutter build web --base-href /quick_board/games/skulking/
+        working-directory: quick-board-flutter/apps/skulking
+
+      - name: Build yacht
+        run: flutter build web --base-href /quick_board/games/yacht/
+        working-directory: quick-board-flutter/apps/yacht
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site/games/skulking
+          mkdir -p _site/games/yacht
+          cp index.html _site/index.html
+          cp -r quick-board-flutter/apps/skulking/build/web/. _site/games/skulking/
+          cp -r quick-board-flutter/apps/yacht/build/web/. _site/games/yacht/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
