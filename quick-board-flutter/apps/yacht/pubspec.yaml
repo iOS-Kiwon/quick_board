@@ -27,3 +27,10 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+
+  fonts:
+    - family: NotoSansKR
+      fonts:
+        - asset: assets/fonts/NotoSansKR-Regular.otf
+        - asset: assets/fonts/NotoSansKR-Bold.otf
+          weight: 700

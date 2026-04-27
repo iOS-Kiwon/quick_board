@@ -30,7 +30,7 @@ abstract final class YachtTheme {
         fontWeight: FontWeight.w700,
         color: YachtColors.primaryBright,
         letterSpacing: 1.5,
-      ),
+      ).copyWith(fontFamilyFallback: const ['NotoSansKR']),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
@@ -50,11 +50,11 @@ abstract final class YachtTheme {
       hintStyle: GoogleFonts.rajdhani(
         color: YachtColors.textDim,
         fontSize: 16,
-      ),
+      ).copyWith(fontFamilyFallback: const ['NotoSansKR']),
       labelStyle: GoogleFonts.rajdhani(
         color: YachtColors.textDim,
         fontSize: 16,
-      ),
+      ).copyWith(fontFamilyFallback: const ['NotoSansKR']),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
