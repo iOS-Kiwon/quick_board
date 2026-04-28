@@ -252,8 +252,8 @@ fabric.properties
 .idea/
 
 
-# Built web output (CI/CD builds these)
-games/
+# Built web output
+# games/  ← 수동 배포 시 커밋 필요, 주석 처리
 
 # Yacht app - non-web platforms (web-only deployment)
 quick-board-flutter/apps/yacht/android/
