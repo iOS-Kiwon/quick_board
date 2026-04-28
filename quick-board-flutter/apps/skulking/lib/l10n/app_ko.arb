@@ -1,6 +1,6 @@
 {
   "@@locale": "ko",
-  "appName": "스컬킹 점수판",
+  "appName": "스컬킹 점수계산",
   "setupTitle": "게임 설정",
   "playerCount": "플레이어 수",
   "playerName": "플레이어 {n} 이름",

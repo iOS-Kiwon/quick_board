@@ -32,6 +32,7 @@ class GameScreen extends ConsumerWidget {
     );
 
     return Scaffold(
+      bottomNavigationBar: const AdBannerWidget(),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),

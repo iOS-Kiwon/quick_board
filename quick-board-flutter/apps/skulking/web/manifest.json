@@ -1,11 +1,11 @@
 {
-    "name": "skulking",
-    "short_name": "skulking",
+    "name": "스컬킹 점수계산",
+    "short_name": "스컬킹",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1B1406",
+    "theme_color": "#C8A028",
+    "description": "Skull King board game score tracker",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

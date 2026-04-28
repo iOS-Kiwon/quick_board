@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In ko, this message translates to:
-  /// **'요트 다이스'**
+  /// **'요트다이스 점수계산'**
   String get appName;
 
   /// No description provided for @setupTitle.

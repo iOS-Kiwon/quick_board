@@ -67,6 +67,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      bottomNavigationBar: const AdBannerWidget(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),

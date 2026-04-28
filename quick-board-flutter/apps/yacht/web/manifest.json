@@ -1,11 +1,11 @@
 {
-    "name": "yacht",
-    "short_name": "yacht",
+    "name": "요트다이스 점수계산",
+    "short_name": "요트다이스",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1A0808",
+    "theme_color": "#CC2222",
+    "description": "Yacht Dice board game score tracker",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -15,6 +15,7 @@ class ResultScreen extends ConsumerWidget {
     final standings = _buildStandings(state);
 
     return Scaffold(
+      bottomNavigationBar: const AdBannerWidget(),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
