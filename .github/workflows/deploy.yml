@@ -34,11 +34,11 @@ jobs:
         working-directory: quick-board-flutter/apps/yacht
 
       - name: Build skulking
-        run: flutter build web --base-href /quick_board/games/skulking/
+        run: flutter build web --base-href /games/skulking/
         working-directory: quick-board-flutter/apps/skulking
 
       - name: Build yacht
-        run: flutter build web --base-href /quick_board/games/yacht/
+        run: flutter build web --base-href /games/yacht/
         working-directory: quick-board-flutter/apps/yacht
 
       - name: Assemble site
