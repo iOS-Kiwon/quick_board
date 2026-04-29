@@ -23,7 +23,12 @@ class AdBannerWidget extends StatelessWidget {
     }
     final builder = mobileAdBuilder;
     if (builder != null) {
-      return builder();
+      return SafeArea(
+        top: false,
+        left: false,
+        right: false,
+        child: builder(),
+      );
     }
     return const SizedBox.shrink();
   }
