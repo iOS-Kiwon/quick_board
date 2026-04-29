@@ -38,7 +38,7 @@ class _MobileAdBannerState extends State<MobileAdBanner> {
   void _loadAd() {
     _bannerAd = BannerAd(
       adUnitId: _adUnitId,
-      request: const AdRequest(),
+      request: const AdRequest(nonPersonalizedAds: true),
       size: AdSize.banner,
       listener: BannerAdListener(
         onAdLoaded: (_) => setState(() => _isLoaded = true),
