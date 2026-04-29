@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>보드게임 점수계산 — 스컬킹·요트다이스 점수 계산기</title>
-  <meta name="description" content="스컬킹(Skull King)과 요트다이스(Yacht Dice) 온라인 점수 계산기. 2~8명 플레이어 지원, 라운드별 점수 자동 계산. 무료로 바로 사용하세요.">
-  <meta name="keywords" content="스컬킹, 요트다이스, 보드게임, 점수계산, 점수 계산기, skull king, yacht dice, board game">
-  <meta property="og:title" content="보드게임 점수계산 — 스컬킹·요트다이스">
-  <meta property="og:description" content="스컬킹, 요트다이스 온라인 점수 계산기. 2~8명 지원, 무료 사용.">
+  <title>보드게임 점수계산 — Skull King · Yacht Dice Score Calculator</title>
+  <meta name="description" content="Free online score calculator for Skull King and Yacht Dice. Supports 2–8 players, auto-calculates scores per round. 스컬킹·요트다이스 무료 온라인 점수 계산기.">
+  <meta name="keywords" content="skull king score calculator, skull king scorepad, yacht dice score calculator, yacht dice scoresheet, board game score tracker, 스컬킹, 요트다이스, 보드게임 점수계산">
+  <meta property="og:title" content="Skull King · Yacht Dice Score Calculator — QuickBoard">
+  <meta property="og:description" content="Free online score calculator for Skull King and Yacht Dice board games. Supports 2–8 players.">
   <meta property="og:url" content="https://quickboard.club/">
   <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:locale:alternate" content="en_US">
   <link rel="canonical" href="https://quickboard.club/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
@@ -154,11 +156,25 @@
       color: #6a6a6a;
       line-height: 1.7;
     }
+
+    .info-ko {
+      margin-top: 8px;
+      font-size: 0.85rem !important;
+      color: #4a4a4a !important;
+    }
+
+    .h1-en {
+      display: block;
+      font-size: 0.55em;
+      color: #5a4a2a;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
-  <h1>보드게임 점수계산</h1>
-  <p class="subtitle">무료 온라인 점수 계산기 · 스컬킹 · 요트 다이스</p>
+  <h1>보드게임 점수계산 <span class="h1-en">Board Game Score Calculator</span></h1>
+  <p class="subtitle">Free Online Score Tracker · Skull King · Yacht Dice</p>
 
   <div class="game-list">
     <a class="game-card skulking" href="games/skulking/">
@@ -176,12 +192,14 @@
 
   <section class="info-section">
     <div class="info-card">
-      <h2>☠️ 스컬킹 점수 계산기</h2>
-      <p>스컬킹(Skull King)은 2~8명이 즐기는 트릭 테이킹 보드게임입니다. 매 라운드 비드(예측 트릭 수)를 입력하면 점수를 자동으로 계산해 드립니다. 보너스 카드(해적, 인어, Skull King) 점수도 지원합니다.</p>
+      <h2>☠️ Skull King Score Calculator</h2>
+      <p>Skull King is a trick-taking card game for 2–8 players. Enter your bid and tricks won each round — scores are calculated automatically, including bonuses for Pirates, Mermaids, and the Skull King card.</p>
+      <p class="info-ko">스컬킹(Skull King) 2~8명 트릭 테이킹 게임. 매 라운드 비드와 트릭 수를 입력하면 점수 자동 계산.</p>
     </div>
     <div class="info-card">
-      <h2>🎲 요트 다이스 점수 계산기</h2>
-      <p>요트 다이스(Yacht Dice)는 2~8명이 즐기는 주사위 보드게임입니다. 에이스부터 요트까지 12개 카테고리 점수를 입력하면 합계와 보너스(상단 합계 63점 이상 시 +35점)를 자동으로 계산합니다.</p>
+      <h2>🎲 Yacht Dice Score Calculator</h2>
+      <p>Yacht Dice is a dice game for 2–8 players with 12 scoring categories (Aces through Yacht). Scores are tallied automatically, including the upper-section bonus (+35 points when upper total ≥ 63).</p>
+      <p class="info-ko">요트 다이스 2~8명 주사위 게임. 12개 카테고리 점수 자동 계산, 보너스(63점 이상 +35점) 지원.</p>
     </div>
   </section>
   <div id="ad-footer">
