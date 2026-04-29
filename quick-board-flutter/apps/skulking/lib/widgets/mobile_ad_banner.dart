@@ -43,8 +43,9 @@ class _MobileAdBannerState extends State<MobileAdBanner> {
       listener: BannerAdListener(
         onAdLoaded: (_) => setState(() => _isLoaded = true),
         onAdFailedToLoad: (ad, error) {
+          debugPrint('[AdMob] 배너 로드 실패: ${error.code} / ${error.message}');
           ad.dispose();
-          _bannerAd = null;
+          setState(() => _bannerAd = null);
         },
       ),
     )..load();
