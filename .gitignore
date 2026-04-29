@@ -257,7 +257,6 @@ fabric.properties
 
 # Yacht app - non-web platforms (web-only deployment)
 quick-board-flutter/apps/yacht/android/
-quick-board-flutter/apps/yacht/ios/
 quick-board-flutter/apps/yacht/linux/
 quick-board-flutter/apps/yacht/macos/
 quick-board-flutter/apps/yacht/windows/
