@@ -2,42 +2,35 @@
   <!-- Background -->
   <rect width="1024" height="1024" fill="#1B1406"/>
 
-  <!-- Gold ambient glow -->
-  <ellipse cx="512" cy="480" rx="310" ry="290" fill="#7A5208" opacity="0.25"/>
+  <!-- Skull group: center (512,384) → (512,512), scale 1.4 -->
+  <g transform="translate(512, 512) scale(1.4) translate(-512, -397)">
+    <!-- Gold ambient glow -->
+    <ellipse cx="512" cy="480" rx="310" ry="290" fill="#7A5208" opacity="0.25"/>
 
-  <!-- Gold border ring -->
-  <rect x="30" y="30" width="964" height="964" rx="190" fill="none" stroke="#C8A028" stroke-width="10" opacity="0.6"/>
+    <!-- Cranium -->
+    <ellipse cx="512" cy="400" rx="230" ry="215" fill="#EEE5C5"/>
+    <!-- Cheekbone fill -->
+    <rect x="305" y="545" width="414" height="115" rx="22" fill="#EEE5C5"/>
+    <rect x="305" y="530" width="414" height="50" fill="#EEE5C5"/>
 
-  <!-- ═══ SKULL ═══ -->
-  <!-- Cranium -->
-  <ellipse cx="512" cy="400" rx="230" ry="215" fill="#EEE5C5"/>
-  <!-- Cheekbone fill -->
-  <rect x="305" y="545" width="414" height="115" rx="22" fill="#EEE5C5"/>
-  <rect x="305" y="530" width="414" height="50" fill="#EEE5C5"/>
+    <!-- Eye sockets -->
+    <ellipse cx="410" cy="395" rx="82" ry="88" fill="#1B1406"/>
+    <ellipse cx="614" cy="395" rx="82" ry="88" fill="#1B1406"/>
 
-  <!-- Eye sockets -->
-  <ellipse cx="410" cy="395" rx="82" ry="88" fill="#1B1406"/>
-  <ellipse cx="614" cy="395" rx="82" ry="88" fill="#1B1406"/>
+    <!-- Nose cavity -->
+    <path d="M486 490 Q512 528 538 490 Q512 475 486 490Z" fill="#1B1406"/>
 
-  <!-- Nose cavity -->
-  <path d="M486 490 Q512 528 538 490 Q512 475 486 490Z" fill="#1B1406"/>
+    <!-- Teeth gaps -->
+    <rect x="342" y="556" width="34" height="66" rx="9" fill="#1B1406"/>
+    <rect x="388" y="552" width="34" height="74" rx="9" fill="#1B1406"/>
+    <rect x="434" y="550" width="34" height="78" rx="9" fill="#1B1406"/>
+    <rect x="480" y="550" width="34" height="78" rx="9" fill="#1B1406"/>
+    <rect x="526" y="550" width="34" height="78" rx="9" fill="#1B1406"/>
+    <rect x="572" y="552" width="34" height="74" rx="9" fill="#1B1406"/>
+    <rect x="618" y="556" width="34" height="66" rx="9" fill="#1B1406"/>
 
-  <!-- Teeth gaps -->
-  <rect x="342" y="556" width="34" height="66" rx="9" fill="#1B1406"/>
-  <rect x="388" y="552" width="34" height="74" rx="9" fill="#1B1406"/>
-  <rect x="434" y="550" width="34" height="78" rx="9" fill="#1B1406"/>
-  <rect x="480" y="550" width="34" height="78" rx="9" fill="#1B1406"/>
-  <rect x="526" y="550" width="34" height="78" rx="9" fill="#1B1406"/>
-  <rect x="572" y="552" width="34" height="74" rx="9" fill="#1B1406"/>
-  <rect x="618" y="556" width="34" height="66" rx="9" fill="#1B1406"/>
-
-  <!-- Gold crown / star -->
-  <polygon points="512,148 528,196 578,196 540,222 555,270 512,244 469,270 484,222 446,196 496,196" fill="#C8A028"/>
-  <circle cx="512" cy="148" r="14" fill="#F0C840"/>
-
-  <!-- ═══ TEXT ═══ -->
-  <text x="512" y="740" font-family="Georgia, serif" font-size="72" font-weight="bold"
-        fill="#C8A028" text-anchor="middle" letter-spacing="6">스컬킹</text>
-  <text x="512" y="810" font-family="Georgia, serif" font-size="36"
-        fill="#8A6A20" text-anchor="middle" letter-spacing="3">점수 계산</text>
+    <!-- Gold crown / star -->
+    <polygon points="512,148 528,196 578,196 540,222 555,270 512,244 469,270 484,222 446,196 496,196" fill="#C8A028"/>
+    <circle cx="512" cy="148" r="14" fill="#F0C840"/>
+  </g>
 </svg>

@@ -2,35 +2,23 @@
   <!-- Background -->
   <rect width="1024" height="1024" fill="#1A0808"/>
 
-  <!-- Red ambient glow -->
-  <ellipse cx="512" cy="470" rx="300" ry="280" fill="#6A0808" opacity="0.3"/>
+  <!-- Dice group: center (508,438) → (512,512), scale 1.4 -->
+  <g transform="translate(512, 512) scale(1.4) translate(-508, -438)">
+    <!-- Red ambient glow -->
+    <ellipse cx="508" cy="438" rx="320" ry="300" fill="#6A0808" opacity="0.3"/>
 
-  <!-- Red border ring -->
-  <rect x="30" y="30" width="964" height="964" rx="190" fill="none" stroke="#CC2222" stroke-width="10" opacity="0.6"/>
+    <!-- Dice shadow -->
+    <rect x="228" y="188" width="580" height="520" rx="90" fill="#3A0505" opacity="0.5"/>
+    <!-- Dice body -->
+    <rect x="218" y="178" width="580" height="520" rx="90" fill="#F2E8E8"/>
+    <!-- Dice inner highlight -->
+    <rect x="228" y="186" width="560" height="200" rx="80" fill="#FAFAFA" opacity="0.4"/>
 
-  <!-- ═══ DICE ═══ -->
-  <!-- Dice shadow -->
-  <rect x="228" y="188" width="580" height="520" rx="90" fill="#3A0505" opacity="0.5"/>
-  <!-- Dice body -->
-  <rect x="218" y="178" width="580" height="520" rx="90" fill="#F2E8E8"/>
-  <!-- Dice inner highlight -->
-  <rect x="228" y="186" width="560" height="200" rx="80" fill="#FAFAFA" opacity="0.4"/>
-
-  <!-- 5 dots — standard dice-5 pattern -->
-  <!-- Top-left -->
-  <circle cx="358" cy="318" r="54" fill="#CC2222"/>
-  <!-- Top-right -->
-  <circle cx="658" cy="318" r="54" fill="#CC2222"/>
-  <!-- Center -->
-  <circle cx="508" cy="438" r="54" fill="#CC2222"/>
-  <!-- Bottom-left -->
-  <circle cx="358" cy="558" r="54" fill="#CC2222"/>
-  <!-- Bottom-right -->
-  <circle cx="658" cy="558" r="54" fill="#CC2222"/>
-
-  <!-- ═══ TEXT ═══ -->
-  <text x="512" y="790" font-family="Arial, sans-serif" font-size="72" font-weight="bold"
-        fill="#FF4444" text-anchor="middle" letter-spacing="4">요트 다이스</text>
-  <text x="512" y="860" font-family="Arial, sans-serif" font-size="36"
-        fill="#882222" text-anchor="middle" letter-spacing="3">점수 계산</text>
+    <!-- 5 dots — standard dice-5 pattern -->
+    <circle cx="358" cy="318" r="54" fill="#CC2222"/>
+    <circle cx="658" cy="318" r="54" fill="#CC2222"/>
+    <circle cx="508" cy="438" r="54" fill="#CC2222"/>
+    <circle cx="358" cy="558" r="54" fill="#CC2222"/>
+    <circle cx="658" cy="558" r="54" fill="#CC2222"/>
+  </g>
 </svg>
