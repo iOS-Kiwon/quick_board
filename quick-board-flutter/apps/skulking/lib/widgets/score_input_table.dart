@@ -24,10 +24,12 @@ class _ScoreInputTableState extends State<ScoreInputTable> {
   late final List<TextEditingController> _bidCtrl;
   late final List<TextEditingController> _tricksCtrl;
   late final List<TextEditingController> _bonusCtrl;
+  late final FocusNode _firstBidFocus;
 
   @override
   void initState() {
     super.initState();
+    _firstBidFocus = FocusNode();
     _bidCtrl = List.generate(widget.players.length, (i) {
       final s = widget.savedScores[i];
       return TextEditingController(text: s != null ? '${s.predictedWins}' : '');
@@ -43,7 +45,23 @@ class _ScoreInputTableState extends State<ScoreInputTable> {
   }
 
   @override
+  void didUpdateWidget(ScoreInputTable oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentRound != widget.currentRound) {
+      for (var i = 0; i < widget.players.length; i++) {
+        _bidCtrl[i].clear();
+        _tricksCtrl[i].clear();
+        _bonusCtrl[i].clear();
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _firstBidFocus.requestFocus();
+      });
+    }
+  }
+
+  @override
   void dispose() {
+    _firstBidFocus.dispose();
     for (final c in [..._bidCtrl, ..._tricksCtrl, ..._bonusCtrl]) {
       c.dispose();
     }
@@ -100,7 +118,7 @@ class _ScoreInputTableState extends State<ScoreInputTable> {
 
           return DataRow(cells: [
             DataCell(Text(widget.players[i])),
-            DataCell(_numberField(_bidCtrl[i], i)),
+            DataCell(_numberField(_bidCtrl[i], i, focusNode: i == 0 ? _firstBidFocus : null)),
             DataCell(_numberField(_tricksCtrl[i], i)),
             DataCell(
               Opacity(
@@ -119,11 +137,12 @@ class _ScoreInputTableState extends State<ScoreInputTable> {
     );
   }
 
-  Widget _numberField(TextEditingController ctrl, int playerIndex) {
+  Widget _numberField(TextEditingController ctrl, int playerIndex, {FocusNode? focusNode}) {
     return SizedBox(
       width: 70,
       child: TextField(
         controller: ctrl,
+        focusNode: focusNode,
         keyboardType: TextInputType.number,
         style: AppTextStyles.body,
         textAlign: TextAlign.center,
