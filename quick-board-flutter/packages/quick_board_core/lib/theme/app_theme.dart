@@ -5,6 +5,7 @@ import 'app_text_styles.dart';
 abstract final class AppTheme {
   static final ThemeData dark = ThemeData(
         brightness: Brightness.dark,
+        fontFamily: 'NotoSansKR',
         scaffoldBackgroundColor: AppColors.background,
         colorScheme: const ColorScheme.dark(
           primary: AppColors.gold,

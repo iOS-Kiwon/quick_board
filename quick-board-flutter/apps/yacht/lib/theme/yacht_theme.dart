@@ -6,6 +6,7 @@ import 'yacht_text_styles.dart';
 abstract final class YachtTheme {
   static final ThemeData dark = ThemeData(
     brightness: Brightness.dark,
+    fontFamily: 'NotoSansKR',
     scaffoldBackgroundColor: YachtColors.background,
     colorScheme: const ColorScheme.dark(
       primary: YachtColors.primary,
