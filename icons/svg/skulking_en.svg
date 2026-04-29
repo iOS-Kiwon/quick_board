@@ -5,7 +5,7 @@
   <!-- Skull group: center (512,384) → (512,512), scale 1.4 -->
   <g transform="translate(512, 512) scale(1.4) translate(-512, -397)">
     <!-- Gold ambient glow -->
-    <ellipse cx="512" cy="480" rx="310" ry="290" fill="#7A5208" opacity="0.25"/>
+    <ellipse cx="512" cy="397" rx="310" ry="290" fill="#7A5208" opacity="0.25"/>
 
     <!-- Cranium -->
     <ellipse cx="512" cy="400" rx="230" ry="215" fill="#EEE5C5"/>
