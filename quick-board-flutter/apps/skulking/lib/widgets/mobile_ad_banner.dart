@@ -15,11 +15,18 @@ class _MobileAdBannerState extends State<MobileAdBanner> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
 
+  static const bool _isRelease = bool.fromEnvironment('dart.vm.product');
+
   static String get _adUnitId {
-    if (Platform.isAndroid) {
-      return 'ca-app-pub-5980133283002959/9454692536';
+    if (!_isRelease) {
+      // 테스트 광고 ID (개발/디버그 빌드 전용)
+      return Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/6300978111'
+          : 'ca-app-pub-3940256099942544/2934735716';
     }
-    return 'ca-app-pub-5980133283002959/1616339778';
+    return Platform.isAndroid
+        ? 'ca-app-pub-5980133283002959/9454692536'
+        : 'ca-app-pub-5980133283002959/1616339778';
   }
 
   @override
