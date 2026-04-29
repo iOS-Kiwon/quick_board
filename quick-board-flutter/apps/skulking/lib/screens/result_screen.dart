@@ -33,10 +33,12 @@ class ResultScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AppButton(
-                  label: '📋 결과 공유',
-                  variant: AppButtonVariant.ghost,
-                  onPressed: () => _share(state, standings),
+                Builder(
+                  builder: (btnContext) => AppButton(
+                    label: '📋 결과 공유',
+                    variant: AppButtonVariant.ghost,
+                    onPressed: () => _share(btnContext, state, standings),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 AppButton(
@@ -63,10 +65,11 @@ class ResultScreen extends ConsumerWidget {
     );
   }
 
-  void _share(
+  Future<void> _share(
+    BuildContext context,
     SkulkingState state,
     List<({String name, int total, int rank})> standings,
-  ) {
+  ) async {
     const pad = 12;
     const scorePad = 8;
     final buf = StringBuffer();
@@ -112,7 +115,21 @@ class ResultScreen extends ConsumerWidget {
       buf.write((t > 0 ? '+$t' : '$t').padRight(scorePad));
     }
 
-    Share.share(buf.toString());
+    final box = context.findRenderObject() as RenderBox?;
+    final origin = box != null
+        ? box.localToGlobal(Offset.zero) & box.size
+        : null;
+
+    try {
+      final result = await Share.share(
+        buf.toString(),
+        subject: '스컬킹 게임 결과',
+        sharePositionOrigin: origin,
+      );
+      debugPrint('[Share] status: ${result.status}');
+    } catch (e, st) {
+      debugPrint('[Share] 실패: $e\n$st');
+    }
   }
 }
 
