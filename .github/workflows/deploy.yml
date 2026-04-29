@@ -34,22 +34,28 @@ jobs:
         working-directory: quick-board-flutter/apps/yacht
 
       - name: Build skulking
-        run: flutter build web --web-renderer html --base-href /games/skulking/
+        run: flutter build web --base-href /games/skulking/
         working-directory: quick-board-flutter/apps/skulking
 
       - name: Build yacht
-        run: flutter build web --web-renderer html --base-href /games/yacht/
+        run: flutter build web --base-href /games/yacht/
         working-directory: quick-board-flutter/apps/yacht
 
       - name: Assemble site
         run: |
           mkdir -p _site/games/skulking
           mkdir -p _site/games/yacht
-          cp index.html _site/index.html
           cp sitemap.xml _site/sitemap.xml
           cp robots.txt _site/robots.txt
           cp -r quick-board-flutter/apps/skulking/build/web/. _site/games/skulking/
           cp -r quick-board-flutter/apps/yacht/build/web/. _site/games/yacht/
+
+          # CanvasKit 엔진 리비전 추출
+          ENGINE_REV=$(grep -o '"engineRevision":"[^"]*"' quick-board-flutter/apps/skulking/build/web/flutter_bootstrap.js | head -1 | sed 's/"engineRevision":"//;s/"//')
+          CANVASKIT_BASE="https://www.gstatic.com/flutter-canvaskit/${ENGINE_REV}"
+
+          # index.html에 prefetch 태그 삽입
+          sed "s|</head>|  <link rel=\"prefetch\" href=\"/games/skulking/main.dart.js\" as=\"script\">\n  <link rel=\"prefetch\" href=\"/games/yacht/main.dart.js\" as=\"script\">\n  <link rel=\"prefetch\" href=\"${CANVASKIT_BASE}/canvaskit.js\" as=\"script\">\n  <link rel=\"prefetch\" href=\"${CANVASKIT_BASE}/canvaskit.wasm\" as=\"fetch\" crossorigin>\n</head>|" index.html > _site/index.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
