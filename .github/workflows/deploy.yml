@@ -47,6 +47,7 @@ jobs:
           mkdir -p _site/games/yacht
           cp sitemap.xml _site/sitemap.xml
           cp robots.txt _site/robots.txt
+          cp -r support _site/support
           cp -r quick-board-flutter/apps/skulking/build/web/. _site/games/skulking/
           cp -r quick-board-flutter/apps/yacht/build/web/. _site/games/yacht/
 
