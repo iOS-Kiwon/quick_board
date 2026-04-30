@@ -141,6 +141,7 @@ class _ResultBody extends StatelessWidget {
       color: AppColors.background,
       padding: const EdgeInsets.all(16),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             l.finalResult,
