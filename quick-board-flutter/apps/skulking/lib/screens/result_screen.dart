@@ -1,16 +1,28 @@
+import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:quick_board_core/quick_board_core.dart';
 import '../models/skulking_state.dart';
 import '../notifiers/skulking_notifier.dart';
 
-class ResultScreen extends ConsumerWidget {
+class ResultScreen extends ConsumerStatefulWidget {
   const ResultScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends ConsumerState<ResultScreen> {
+  final GlobalKey _captureKey = GlobalKey();
+  bool _isSharing = false;
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(skulkingProvider);
     final standings = _buildStandings(state);
 
@@ -20,24 +32,37 @@ class ResultScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Text(
-              '🏆 최종 결과',
-              style: AppTextStyles.heading,
-              textAlign: TextAlign.center,
+            RepaintBoundary(
+              key: _captureKey,
+              child: Container(
+                color: AppColors.background,
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Text(
+                      '🏆 최종 결과',
+                      style: AppTextStyles.heading,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    _PodiumRow(standings: standings),
+                    const SizedBox(height: 24),
+                    _ResultTable(state: state),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 24),
-            _PodiumRow(standings: standings),
-            const SizedBox(height: 24),
-            _ResultTable(state: state),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Builder(
                   builder: (btnContext) => AppButton(
-                    label: '📋 결과 공유',
+                    label: _isSharing ? '⏳ 공유 준비 중...' : '📋 결과 공유',
                     variant: AppButtonVariant.ghost,
-                    onPressed: () => _share(btnContext, state, standings),
+                    onPressed: _isSharing
+                        ? null
+                        : () => _shareScreenshot(btnContext),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -65,70 +90,46 @@ class ResultScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _share(
-    BuildContext context,
-    SkulkingState state,
-    List<({String name, int total, int rank})> standings,
-  ) async {
-    const pad = 12;
-    const scorePad = 8;
-    final buf = StringBuffer();
-
-    buf.writeln('☠️ 스컬킹 게임 결과 ☠️');
-    buf.writeln(DateTime.now().toIso8601String().substring(0, 10));
-    buf.writeln();
-    buf.writeln('[ 최종 순위 ]');
-    for (final s in standings) {
-      final score = s.total > 0 ? '+${s.total}' : '${s.total}';
-      buf.writeln('${s.rank}위  ${s.name.padRight(pad)}${score}점');
-    }
-
-    buf.writeln();
-    buf.writeln('[ 라운드별 점수 ]');
-    buf.write(''.padRight(pad));
-    for (final p in state.players) {
-      buf.write((p.length > 6 ? p.substring(0, 6) : p).padRight(scorePad));
-    }
-    buf.writeln();
-
-    for (var r = 1; r <= kMaxRounds; r++) {
-      final hasAny = state.players
-          .asMap()
-          .keys
-          .any((i) => state.scores[i]?[r] != null);
-      if (!hasAny) continue;
-
-      buf.write('R$r'.padRight(pad));
-      for (var i = 0; i < state.players.length; i++) {
-        final s = state.scores[i]?[r];
-        final label = s != null
-            ? (s.roundScore > 0 ? '+${s.roundScore}' : '${s.roundScore}')
-            : '—';
-        buf.write(label.padRight(scorePad));
-      }
-      buf.writeln();
-    }
-
-    buf.write('합계'.padRight(pad));
-    for (var i = 0; i < state.players.length; i++) {
-      final t = state.totalScore(i);
-      buf.write((t > 0 ? '+$t' : '$t').padRight(scorePad));
-    }
-
-    final box = context.findRenderObject() as RenderBox?;
-    final origin = box != null
-        ? box.localToGlobal(Offset.zero) & box.size
-        : null;
-
+  Future<void> _shareScreenshot(BuildContext btnContext) async {
+    setState(() => _isSharing = true);
     try {
-      final result = await Share.share(
-        buf.toString(),
+      final boundary = _captureKey.currentContext?.findRenderObject()
+          as RenderRepaintBoundary?;
+      if (boundary == null) {
+        debugPrint('[Share] RepaintBoundary not found');
+        return;
+      }
+
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      final pngBytes = byteData?.buffer.asUint8List();
+      if (pngBytes == null) {
+        debugPrint('[Share] PNG bytes null');
+        return;
+      }
+
+      final dir = await getTemporaryDirectory();
+      final file = File(
+        '${dir.path}/skulking_result_${DateTime.now().millisecondsSinceEpoch}.png',
+      );
+      await file.writeAsBytes(pngBytes);
+
+      if (!mounted) return;
+      final box = btnContext.findRenderObject() as RenderBox?;
+      final origin = box != null
+          ? box.localToGlobal(Offset.zero) & box.size
+          : null;
+
+      final result = await Share.shareXFiles(
+        [XFile(file.path, mimeType: 'image/png')],
         subject: '스컬킹 게임 결과',
         sharePositionOrigin: origin,
       );
       debugPrint('[Share] status: ${result.status}');
     } catch (e, st) {
       debugPrint('[Share] 실패: $e\n$st');
+    } finally {
+      if (mounted) setState(() => _isSharing = false);
     }
   }
 }

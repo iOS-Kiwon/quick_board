@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:quick_board_core/quick_board_core.dart';
 import '../l10n/app_localizations.dart';
@@ -10,11 +14,19 @@ import '../theme/yacht_colors.dart';
 import '../theme/yacht_text_styles.dart';
 import '../widgets/yacht_button.dart';
 
-class ResultScreen extends ConsumerWidget {
+class ResultScreen extends ConsumerStatefulWidget {
   const ResultScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends ConsumerState<ResultScreen> {
+  final GlobalKey _captureKey = GlobalKey();
+  bool _isSharing = false;
+
+  @override
+  Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final state = ref.watch(yachtProvider);
 
@@ -36,28 +48,41 @@ class ResultScreen extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l.finalResult, style: YachtTextStyles.appTitle),
-            const SizedBox(height: 20),
             Expanded(
-              child: ListView.builder(
-                itemCount: ranked.length,
-                itemBuilder: (context, i) {
-                  final (rank, name, score) = ranked[i];
-                  return _RankRow(
-                    rank: rank,
-                    name: name,
-                    score: score,
-                    l: l,
-                  );
-                },
+              child: SingleChildScrollView(
+                child: RepaintBoundary(
+                  key: _captureKey,
+                  child: Container(
+                    color: YachtColors.background,
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(l.finalResult, style: YachtTextStyles.appTitle),
+                        const SizedBox(height: 20),
+                        ...ranked.map((entry) {
+                          final (rank, name, score) = entry;
+                          return _RankRow(
+                            rank: rank,
+                            name: name,
+                            score: score,
+                            l: l,
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 16),
-            YachtButton(
-              label: l.shareResult,
-              onPressed: () => _share(state, l),
+            Builder(
+              builder: (btnContext) => YachtButton(
+                label: _isSharing ? '⏳ ...' : l.shareResult,
+                onPressed: _isSharing ? null : () => _shareScreenshot(btnContext, l),
+              ),
             ),
             const SizedBox(height: 10),
             YachtButton(
@@ -88,28 +113,47 @@ class ResultScreen extends ConsumerWidget {
     });
   }
 
-  void _share(YachtState state, AppLocalizations l) {
-    final buf = StringBuffer();
-    buf.writeln(l.shareHeader);
-    buf.writeln();
-    buf.writeln(l.shareFinalStandings);
+  Future<void> _shareScreenshot(BuildContext btnContext, AppLocalizations l) async {
+    setState(() => _isSharing = true);
+    try {
+      final boundary = _captureKey.currentContext?.findRenderObject()
+          as RenderRepaintBoundary?;
+      if (boundary == null) {
+        debugPrint('[Share] RepaintBoundary not found');
+        return;
+      }
 
-    final ranked = _rankPlayers(state);
-    for (final (rank, name, score) in ranked) {
-      buf.writeln('${l.rankLabel(rank)} $name — ${l.pointsSuffix(score.toString())}');
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      final pngBytes = byteData?.buffer.asUint8List();
+      if (pngBytes == null) {
+        debugPrint('[Share] PNG bytes null');
+        return;
+      }
+
+      final dir = await getTemporaryDirectory();
+      final file = File(
+        '${dir.path}/yacht_result_${DateTime.now().millisecondsSinceEpoch}.png',
+      );
+      await file.writeAsBytes(pngBytes);
+
+      if (!mounted) return;
+      final box = btnContext.findRenderObject() as RenderBox?;
+      final origin = box != null
+          ? box.localToGlobal(Offset.zero) & box.size
+          : null;
+
+      final result = await Share.shareXFiles(
+        [XFile(file.path, mimeType: 'image/png')],
+        subject: l.appName,
+        sharePositionOrigin: origin,
+      );
+      debugPrint('[Share] status: ${result.status}');
+    } catch (e, st) {
+      debugPrint('[Share] 실패: $e\n$st');
+    } finally {
+      if (mounted) setState(() => _isSharing = false);
     }
-
-    buf.writeln();
-    buf.writeln(l.shareRoundScores);
-
-    for (int i = 0; i < state.players.length; i++) {
-      buf.writeln('\n${state.players[i]}');
-      buf.writeln('  ${l.shareUpperSubtotal}: ${state.upperSubtotal(i)}');
-      buf.writeln('  ${l.shareBonus}: ${state.bonus(i)}');
-      buf.writeln('  ${l.shareTotal}: ${state.totalScore(i)}');
-    }
-
-    Share.share(buf.toString());
   }
 }
 
