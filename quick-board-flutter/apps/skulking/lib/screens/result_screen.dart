@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:quick_board_core/quick_board_core.dart';
+import '../l10n/app_localizations.dart';
 import '../models/skulking_state.dart';
 import '../notifiers/skulking_notifier.dart';
 
@@ -25,6 +26,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(skulkingProvider);
     final standings = _buildStandings(state);
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       bottomNavigationBar: const AdBannerWidget(),
@@ -40,7 +42,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                 child: Column(
                   children: [
                     Text(
-                      '🏆 최종 결과',
+                      l.finalResult,
                       style: AppTextStyles.heading,
                       textAlign: TextAlign.center,
                     ),
@@ -58,16 +60,16 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               children: [
                 Builder(
                   builder: (btnContext) => AppButton(
-                    label: _isSharing ? '⏳ 공유 준비 중...' : '📋 결과 공유',
+                    label: _isSharing ? l.sharingPreparing : l.shareResult,
                     variant: AppButtonVariant.ghost,
                     onPressed: _isSharing
                         ? null
-                        : () => _shareScreenshot(btnContext),
+                        : () => _shareScreenshot(btnContext, l),
                   ),
                 ),
                 const SizedBox(width: 12),
                 AppButton(
-                  label: '🔄 다시 하기',
+                  label: l.playAgain,
                   onPressed: () => context.go('/'),
                 ),
               ],
@@ -90,7 +92,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     );
   }
 
-  Future<void> _shareScreenshot(BuildContext btnContext) async {
+  Future<void> _shareScreenshot(BuildContext btnContext, AppLocalizations l) async {
     setState(() => _isSharing = true);
     try {
       final boundary = _captureKey.currentContext?.findRenderObject()
@@ -122,7 +124,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
 
       final result = await Share.shareXFiles(
         [XFile(file.path, mimeType: 'image/png')],
-        subject: '스컬킹 게임 결과',
+        subject: l.shareSubject,
         sharePositionOrigin: origin,
       );
       debugPrint('[Share] status: ${result.status}');
@@ -141,13 +143,14 @@ class _PodiumRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     const emojis = ['🥇', '🥈', '🥉'];
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 16,
       runSpacing: 12,
       children: standings.map((s) {
-        final rankEmoji = s.rank <= 3 ? emojis[s.rank - 1] : '${s.rank}위';
+        final rankEmoji = s.rank <= 3 ? emojis[s.rank - 1] : l.rankLabel(s.rank);
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -170,6 +173,7 @@ class _ResultTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final totals = List.generate(state.players.length, state.totalScore);
+    final l = AppLocalizations.of(context)!;
 
     return LayoutBuilder(
       builder: (context, constraints) => SingleChildScrollView(
@@ -182,7 +186,7 @@ class _ResultTable extends StatelessWidget {
               dataTextStyle: AppTextStyles.body,
               columnSpacing: 12,
               columns: [
-                DataColumn(label: Text('라운드', style: AppTextStyles.bodyDim)),
+                DataColumn(label: Text(l.roundHeader, style: AppTextStyles.bodyDim)),
                 ...state.players.map((p) => DataColumn(
                       label: Text(p, style: AppTextStyles.bodyDim),
                       numeric: true,
@@ -198,7 +202,7 @@ class _ResultTable extends StatelessWidget {
                   if (!hasAny) return null;
 
                   return DataRow(cells: [
-                    DataCell(Text('R$r', style: AppTextStyles.bodyDim)),
+                    DataCell(Text(l.roundPrefix(r), style: AppTextStyles.bodyDim)),
                     ...List.generate(state.players.length, (pi) {
                       final s = state.scores[pi]?[r];
                       return DataCell(
@@ -212,7 +216,7 @@ class _ResultTable extends StatelessWidget {
                 DataRow(
                   color: WidgetStateProperty.all(AppColors.card),
                   cells: [
-                    DataCell(Text('합계', style: AppTextStyles.subheading)),
+                    DataCell(Text(l.shareTotal, style: AppTextStyles.subheading)),
                     ...totals.map((t) => DataCell(ScoreCard(score: t))),
                   ],
                 ),

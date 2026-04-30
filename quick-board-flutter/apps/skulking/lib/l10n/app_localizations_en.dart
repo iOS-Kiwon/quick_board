@@ -12,10 +12,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appName => 'Skull King Score';
 
   @override
-  String get setupTitle => 'Game Setup';
+  String get setupTitle => '☠️ Game Setup';
 
   @override
   String get playerCount => 'Number of Players';
+
+  @override
+  String playerCountSuffix(int n) {
+    return '$n players';
+  }
+
+  @override
+  String get playerNamesTitle => 'Player Names';
 
   @override
   String playerName(int n) {
@@ -23,7 +31,18 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String defaultPlayerName(int n) {
+    return 'Player $n';
+  }
+
+  @override
   String get startGame => '⚓ Start Game';
+
+  @override
+  String get playerHeader => 'Player';
+
+  @override
+  String get roundHeader => 'Round';
 
   @override
   String get predictedWins => 'Bid';
@@ -61,7 +80,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareResult => '📋 Share Results';
 
   @override
+  String get sharingPreparing => '⏳ Preparing...';
+
+  @override
   String get playAgain => '🔄 Play Again';
+
+  @override
+  String get shareSubject => 'Skull King Result';
 
   @override
   String get shareHeader => '☠️ Skull King Results ☠️';
@@ -90,7 +115,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String rankLabel(int rank) {
-    return '${rank}th';
+    return '#$rank';
   }
 
   @override

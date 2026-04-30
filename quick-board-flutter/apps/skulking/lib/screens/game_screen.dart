@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quick_board_core/quick_board_core.dart';
+import '../l10n/app_localizations.dart';
 import '../models/player_score.dart';
 import '../models/skulking_state.dart';
 import '../notifiers/skulking_notifier.dart';
@@ -17,6 +18,7 @@ class GameScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(skulkingProvider);
     final notifier = ref.read(skulkingProvider.notifier);
+    final l = AppLocalizations.of(context)!;
     final r = state.currentRound;
     final isOnLatest = r == state.maxVisitedRound;
     final canAdvance = state.isSumValid && isOnLatest && r < kMaxRounds;
@@ -94,12 +96,12 @@ class GameScreen extends ConsumerWidget {
                       children: [
                         if (canAdvance)
                           AppButton(
-                            label: '다음 라운드 ▶',
+                            label: l.nextRound,
                             onPressed: notifier.advanceRound,
                           ),
                         const SizedBox(width: 12),
                         AppButton(
-                          label: '🏁 게임 종료',
+                          label: l.endGame,
                           variant: AppButtonVariant.danger,
                           onPressed: () => context.go('/result'),
                         ),
@@ -117,7 +119,7 @@ class GameScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('📊 누적 총점', style: AppTextStyles.subheading),
+                    Text(l.cumulativeScore, style: AppTextStyles.subheading),
                     const SizedBox(height: 12),
                     ScoreboardTable(
                       players: state.players,

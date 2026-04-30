@@ -28,6 +28,7 @@ class SkulkingApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: appRouter,
       theme: AppTheme.dark,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

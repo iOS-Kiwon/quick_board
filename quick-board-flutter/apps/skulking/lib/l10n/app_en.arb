@@ -1,15 +1,30 @@
 {
   "@@locale": "en",
   "appName": "Skull King Score",
-  "setupTitle": "Game Setup",
+  "setupTitle": "☠️ Game Setup",
   "playerCount": "Number of Players",
+  "playerCountSuffix": "{n} players",
+  "@playerCountSuffix": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "playerNamesTitle": "Player Names",
   "playerName": "Player {n} Name",
   "@playerName": {
     "placeholders": {
       "n": { "type": "int" }
     }
   },
+  "defaultPlayerName": "Player {n}",
+  "@defaultPlayerName": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
   "startGame": "⚓ Start Game",
+  "playerHeader": "Player",
+  "roundHeader": "Round",
   "predictedWins": "Bid",
   "actualWins": "Tricks",
   "bonus": "Bonus",
@@ -27,7 +42,9 @@
   "tricksOk": "✓",
   "finalResult": "🏆 Final Results",
   "shareResult": "📋 Share Results",
+  "sharingPreparing": "⏳ Preparing...",
   "playAgain": "🔄 Play Again",
+  "shareSubject": "Skull King Result",
   "shareHeader": "☠️ Skull King Results ☠️",
   "shareFinalStandings": "[ Final Standings ]",
   "shareRoundScores": "[ Round Scores ]",
@@ -45,7 +62,7 @@
       "round": { "type": "int" }
     }
   },
-  "rankLabel": "{rank}th",
+  "rankLabel": "#{rank}",
   "@rankLabel": {
     "placeholders": {
       "rank": { "type": "int" }

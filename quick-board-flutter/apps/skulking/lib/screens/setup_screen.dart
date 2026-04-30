@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quick_board_core/quick_board_core.dart';
+import '../l10n/app_localizations.dart';
 import '../notifiers/skulking_notifier.dart';
 
 class SetupScreen extends ConsumerStatefulWidget {
@@ -51,11 +52,12 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
   }
 
   void _startGame() {
+    final l = AppLocalizations.of(context)!;
     final players = List.generate(
       _playerCount,
       (i) {
         final name = _controllers[i].text.trim();
-        return name.isEmpty ? '플레이어 ${i + 1}' : name;
+        return name.isEmpty ? l.defaultPlayerName(i + 1) : name;
       },
     );
     ref.read(skulkingProvider.notifier).startGame(players);
@@ -65,6 +67,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       bottomNavigationBar: const AdBannerWidget(),
@@ -76,12 +79,12 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
             children: [
               const SizedBox(height: 16),
               Text(
-                '☠️ 게임 설정',
+                l.setupTitle,
                 style: theme.textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
-              Text('플레이어 수', style: theme.textTheme.titleMedium),
+              Text(l.playerCount, style: theme.textTheme.titleMedium),
               const SizedBox(height: 8),
               DropdownButton<int>(
                 value: _playerCount,
@@ -89,26 +92,29 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
                 style: AppTextStyles.body,
                 isExpanded: true,
                 items: List.generate(7, (i) => i + 2)
-                    .map((n) => DropdownMenuItem(value: n, child: Text('$n명')))
+                    .map((n) => DropdownMenuItem(
+                          value: n,
+                          child: Text(l.playerCountSuffix(n)),
+                        ))
                     .toList(),
                 onChanged: _onPlayerCountChanged,
               ),
               const SizedBox(height: 24),
-              Text('플레이어 이름', style: theme.textTheme.titleMedium),
+              Text(l.playerNamesTitle, style: theme.textTheme.titleMedium),
               const SizedBox(height: 12),
               ...List.generate(
                 _playerCount,
                 (i) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: PlayerNameInput(
-                    label: '플레이어 ${i + 1} 이름',
+                    label: l.playerName(i + 1),
                     controller: _controllers[i],
                   ),
                 ),
               ),
               const SizedBox(height: 24),
               AppButton(
-                label: '⚓ 게임 시작',
+                label: l.startGame,
                 onPressed: _startGame,
               ),
             ],

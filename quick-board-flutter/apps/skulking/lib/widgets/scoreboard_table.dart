@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quick_board_core/quick_board_core.dart';
+import '../l10n/app_localizations.dart';
 import '../models/player_score.dart';
 import '../models/skulking_state.dart';
 
@@ -19,6 +20,7 @@ class ScoreboardTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -30,7 +32,7 @@ class ScoreboardTable extends StatelessWidget {
               dataTextStyle: AppTextStyles.body,
               columnSpacing: 12,
               columns: [
-                DataColumn(label: Text('라운드', style: AppTextStyles.bodyDim)),
+                DataColumn(label: Text(l.roundHeader, style: AppTextStyles.bodyDim)),
                 ...players.map((p) => DataColumn(
                       label: Text(p, style: AppTextStyles.bodyDim),
                       numeric: true,
@@ -46,7 +48,7 @@ class ScoreboardTable extends StatelessWidget {
                             AppColors.gold.withOpacity(0.08))
                         : null,
                     cells: [
-                      DataCell(Text('R$r',
+                      DataCell(Text(l.roundPrefix(r),
                           style: isCurrent
                               ? AppTextStyles.body
                                   .copyWith(color: AppColors.goldBright)
@@ -65,7 +67,7 @@ class ScoreboardTable extends StatelessWidget {
                 DataRow(
                   color: WidgetStateProperty.all(AppColors.card),
                   cells: [
-                    DataCell(Text('합계', style: AppTextStyles.subheading)),
+                    DataCell(Text(l.shareTotal, style: AppTextStyles.subheading)),
                     ...totalScores.map((t) => DataCell(ScoreCard(score: t))),
                   ],
                 ),

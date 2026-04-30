@@ -12,10 +12,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appName => '스컬킹 점수계산';
 
   @override
-  String get setupTitle => '게임 설정';
+  String get setupTitle => '☠️ 게임 설정';
 
   @override
   String get playerCount => '플레이어 수';
+
+  @override
+  String playerCountSuffix(int n) {
+    return '$n명';
+  }
+
+  @override
+  String get playerNamesTitle => '플레이어 이름';
 
   @override
   String playerName(int n) {
@@ -23,7 +31,18 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String defaultPlayerName(int n) {
+    return '플레이어 $n';
+  }
+
+  @override
   String get startGame => '⚓ 게임 시작';
+
+  @override
+  String get playerHeader => '플레이어';
+
+  @override
+  String get roundHeader => '라운드';
 
   @override
   String get predictedWins => '예측승';
@@ -61,7 +80,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get shareResult => '📋 결과 공유';
 
   @override
+  String get sharingPreparing => '⏳ 공유 준비 중...';
+
+  @override
   String get playAgain => '🔄 다시 하기';
+
+  @override
+  String get shareSubject => '스컬킹 게임 결과';
 
   @override
   String get shareHeader => '☠️ 스컬킹 게임 결과 ☠️';

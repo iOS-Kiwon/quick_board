@@ -1,15 +1,30 @@
 {
   "@@locale": "ko",
   "appName": "스컬킹 점수계산",
-  "setupTitle": "게임 설정",
+  "setupTitle": "☠️ 게임 설정",
   "playerCount": "플레이어 수",
+  "playerCountSuffix": "{n}명",
+  "@playerCountSuffix": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "playerNamesTitle": "플레이어 이름",
   "playerName": "플레이어 {n} 이름",
   "@playerName": {
     "placeholders": {
       "n": { "type": "int" }
     }
   },
+  "defaultPlayerName": "플레이어 {n}",
+  "@defaultPlayerName": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
   "startGame": "⚓ 게임 시작",
+  "playerHeader": "플레이어",
+  "roundHeader": "라운드",
   "predictedWins": "예측승",
   "actualWins": "획득승",
   "bonus": "보너스",
@@ -27,7 +42,9 @@
   "tricksOk": "✓",
   "finalResult": "🏆 최종 결과",
   "shareResult": "📋 결과 공유",
+  "sharingPreparing": "⏳ 공유 준비 중...",
   "playAgain": "🔄 다시 하기",
+  "shareSubject": "스컬킹 게임 결과",
   "shareHeader": "☠️ 스컬킹 게임 결과 ☠️",
   "shareFinalStandings": "[ 최종 순위 ]",
   "shareRoundScores": "[ 라운드별 점수 ]",

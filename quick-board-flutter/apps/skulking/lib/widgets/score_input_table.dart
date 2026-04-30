@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quick_board_core/quick_board_core.dart';
+import '../l10n/app_localizations.dart';
 import '../models/player_score.dart';
 
 class ScoreInputTable extends StatefulWidget {
@@ -97,6 +98,7 @@ class _ScoreInputTableState extends State<ScoreInputTable> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
@@ -104,11 +106,11 @@ class _ScoreInputTableState extends State<ScoreInputTable> {
         dataTextStyle: AppTextStyles.body,
         columnSpacing: 12,
         columns: [
-          DataColumn(label: Text('플레이어', style: AppTextStyles.bodyDim)),
-          DataColumn(label: Text('예측승', style: AppTextStyles.bodyDim), numeric: true),
-          DataColumn(label: Text('획득승', style: AppTextStyles.bodyDim), numeric: true),
-          DataColumn(label: Text('보너스', style: AppTextStyles.bodyDim), numeric: true),
-          DataColumn(label: Text('점수', style: AppTextStyles.bodyDim), numeric: true),
+          DataColumn(label: Text(l.playerHeader, style: AppTextStyles.bodyDim)),
+          DataColumn(label: Text(l.predictedWins, style: AppTextStyles.bodyDim), numeric: true),
+          DataColumn(label: Text(l.actualWins, style: AppTextStyles.bodyDim), numeric: true),
+          DataColumn(label: Text(l.bonus, style: AppTextStyles.bodyDim), numeric: true),
+          DataColumn(label: Text(l.roundScore, style: AppTextStyles.bodyDim), numeric: true),
         ],
         rows: List.generate(widget.players.length, (i) {
           final saved = widget.savedScores[i];

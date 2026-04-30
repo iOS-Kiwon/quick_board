@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupTitle.
   ///
   /// In ko, this message translates to:
-  /// **'게임 설정'**
+  /// **'☠️ 게임 설정'**
   String get setupTitle;
 
   /// No description provided for @playerCount.
@@ -116,17 +116,47 @@ abstract class AppLocalizations {
   /// **'플레이어 수'**
   String get playerCount;
 
+  /// No description provided for @playerCountSuffix.
+  ///
+  /// In ko, this message translates to:
+  /// **'{n}명'**
+  String playerCountSuffix(int n);
+
+  /// No description provided for @playerNamesTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'플레이어 이름'**
+  String get playerNamesTitle;
+
   /// No description provided for @playerName.
   ///
   /// In ko, this message translates to:
   /// **'플레이어 {n} 이름'**
   String playerName(int n);
 
+  /// No description provided for @defaultPlayerName.
+  ///
+  /// In ko, this message translates to:
+  /// **'플레이어 {n}'**
+  String defaultPlayerName(int n);
+
   /// No description provided for @startGame.
   ///
   /// In ko, this message translates to:
   /// **'⚓ 게임 시작'**
   String get startGame;
+
+  /// No description provided for @playerHeader.
+  ///
+  /// In ko, this message translates to:
+  /// **'플레이어'**
+  String get playerHeader;
+
+  /// No description provided for @roundHeader.
+  ///
+  /// In ko, this message translates to:
+  /// **'라운드'**
+  String get roundHeader;
 
   /// No description provided for @predictedWins.
   ///
@@ -194,11 +224,23 @@ abstract class AppLocalizations {
   /// **'📋 결과 공유'**
   String get shareResult;
 
+  /// No description provided for @sharingPreparing.
+  ///
+  /// In ko, this message translates to:
+  /// **'⏳ 공유 준비 중...'**
+  String get sharingPreparing;
+
   /// No description provided for @playAgain.
   ///
   /// In ko, this message translates to:
   /// **'🔄 다시 하기'**
   String get playAgain;
+
+  /// No description provided for @shareSubject.
+  ///
+  /// In ko, this message translates to:
+  /// **'스컬킹 게임 결과'**
+  String get shareSubject;
 
   /// No description provided for @shareHeader.
   ///
