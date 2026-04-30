@@ -45,7 +45,10 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
         backgroundColor: YachtColors.background,
         elevation: 0,
       ),
-      body: Padding(
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -75,6 +78,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
