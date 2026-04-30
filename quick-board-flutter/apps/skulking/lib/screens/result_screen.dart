@@ -170,48 +170,55 @@ class _ResultTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final totals = List.generate(state.players.length, state.totalScore);
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        headingTextStyle: AppTextStyles.bodyDim,
-        dataTextStyle: AppTextStyles.body,
-        columnSpacing: 12,
-        columns: [
-          DataColumn(label: Text('라운드', style: AppTextStyles.bodyDim)),
-          ...state.players.map((p) => DataColumn(
-                label: Text(p, style: AppTextStyles.bodyDim),
-                numeric: true,
-              )),
-        ],
-        rows: [
-          ...List.generate(kMaxRounds, (i) {
-            final r = i + 1;
-            final hasAny = state.players
-                .asMap()
-                .keys
-                .any((pi) => state.scores[pi]?[r] != null);
-            if (!hasAny) return null;
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: constraints.maxWidth),
+          child: Center(
+            child: DataTable(
+              headingTextStyle: AppTextStyles.bodyDim,
+              dataTextStyle: AppTextStyles.body,
+              columnSpacing: 12,
+              columns: [
+                DataColumn(label: Text('라운드', style: AppTextStyles.bodyDim)),
+                ...state.players.map((p) => DataColumn(
+                      label: Text(p, style: AppTextStyles.bodyDim),
+                      numeric: true,
+                    )),
+              ],
+              rows: [
+                ...List.generate(kMaxRounds, (i) {
+                  final r = i + 1;
+                  final hasAny = state.players
+                      .asMap()
+                      .keys
+                      .any((pi) => state.scores[pi]?[r] != null);
+                  if (!hasAny) return null;
 
-            return DataRow(cells: [
-              DataCell(Text('R$r', style: AppTextStyles.bodyDim)),
-              ...List.generate(state.players.length, (pi) {
-                final s = state.scores[pi]?[r];
-                return DataCell(
-                  s != null
-                      ? ScoreCard(score: s.roundScore)
-                      : Text('—', style: AppTextStyles.bodyDim),
-                );
-              }),
-            ]);
-          }).whereType<DataRow>().toList(),
-          DataRow(
-            color: WidgetStateProperty.all(AppColors.card),
-            cells: [
-              DataCell(Text('합계', style: AppTextStyles.subheading)),
-              ...totals.map((t) => DataCell(ScoreCard(score: t))),
-            ],
+                  return DataRow(cells: [
+                    DataCell(Text('R$r', style: AppTextStyles.bodyDim)),
+                    ...List.generate(state.players.length, (pi) {
+                      final s = state.scores[pi]?[r];
+                      return DataCell(
+                        s != null
+                            ? ScoreCard(score: s.roundScore)
+                            : Text('—', style: AppTextStyles.bodyDim),
+                      );
+                    }),
+                  ]);
+                }).whereType<DataRow>().toList(),
+                DataRow(
+                  color: WidgetStateProperty.all(AppColors.card),
+                  cells: [
+                    DataCell(Text('합계', style: AppTextStyles.subheading)),
+                    ...totals.map((t) => DataCell(ScoreCard(score: t))),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -43,9 +43,19 @@ class ScoreSheetTable extends StatelessWidget {
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Column(children: rows),
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: rows,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
