@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:quick_board_core/quick_board_core.dart';
 import '../l10n/app_localizations.dart';
@@ -12,6 +11,7 @@ import '../models/yacht_state.dart';
 import '../notifiers/yacht_notifier.dart';
 import '../theme/yacht_colors.dart';
 import '../theme/yacht_text_styles.dart';
+import '../theme/yacht_theme.dart';
 import '../widgets/yacht_button.dart';
 
 class ResultScreen extends ConsumerStatefulWidget {
@@ -22,7 +22,7 @@ class ResultScreen extends ConsumerStatefulWidget {
 }
 
 class _ResultScreenState extends ConsumerState<ResultScreen> {
-  final GlobalKey _captureKey = GlobalKey();
+  final ScreenshotController _screenshotController = ScreenshotController();
   bool _isSharing = false;
 
   @override
@@ -52,36 +52,16 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                child: RepaintBoundary(
-                  key: _captureKey,
-                  child: Container(
-                    color: YachtColors.background,
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(l.finalResult, style: YachtTextStyles.appTitle),
-                        const SizedBox(height: 20),
-                        ...ranked.map((entry) {
-                          final (rank, name, score) = entry;
-                          return _RankRow(
-                            rank: rank,
-                            name: name,
-                            score: score,
-                            l: l,
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                ),
+                child: _ResultBody(ranked: ranked, l: l),
               ),
             ),
             const SizedBox(height: 16),
             Builder(
               builder: (btnContext) => YachtButton(
                 label: _isSharing ? '⏳ ...' : l.shareResult,
-                onPressed: _isSharing ? null : () => _shareScreenshot(btnContext, l),
+                onPressed: _isSharing
+                    ? null
+                    : () => _shareScreenshot(btnContext, ranked, l),
               ),
             ),
             const SizedBox(height: 10),
@@ -113,23 +93,30 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     });
   }
 
-  Future<void> _shareScreenshot(BuildContext btnContext, AppLocalizations l) async {
+  Future<void> _shareScreenshot(
+    BuildContext btnContext,
+    List<(int rank, String name, int score)> ranked,
+    AppLocalizations l,
+  ) async {
     setState(() => _isSharing = true);
     try {
-      final boundary = _captureKey.currentContext?.findRenderObject()
-          as RenderRepaintBoundary?;
-      if (boundary == null) {
-        debugPrint('[Share] RepaintBoundary not found');
-        return;
-      }
+      final captureWidget = MediaQuery(
+        data: MediaQuery.of(context),
+        child: Theme(
+          data: YachtTheme.dark,
+          child: Material(
+            color: YachtColors.background,
+            child: _ResultBody(ranked: ranked, l: l),
+          ),
+        ),
+      );
 
-      final image = await boundary.toImage(pixelRatio: 3.0);
-      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final pngBytes = byteData?.buffer.asUint8List();
-      if (pngBytes == null) {
-        debugPrint('[Share] PNG bytes null');
-        return;
-      }
+      final pngBytes = await _screenshotController.captureFromWidget(
+        captureWidget,
+        pixelRatio: 3.0,
+        context: context,
+        delay: const Duration(milliseconds: 50),
+      );
 
       final dir = await getTemporaryDirectory();
       final file = File(
@@ -154,6 +141,33 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     } finally {
       if (mounted) setState(() => _isSharing = false);
     }
+  }
+}
+
+class _ResultBody extends StatelessWidget {
+  const _ResultBody({required this.ranked, required this.l});
+
+  final List<(int rank, String name, int score)> ranked;
+  final AppLocalizations l;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: YachtColors.background,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(l.finalResult, style: YachtTextStyles.appTitle),
+          const SizedBox(height: 20),
+          ...ranked.map((entry) {
+            final (rank, name, score) = entry;
+            return _RankRow(rank: rank, name: name, score: score, l: l);
+          }),
+        ],
+      ),
+    );
   }
 }
 

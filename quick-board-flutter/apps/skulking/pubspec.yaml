@@ -17,6 +17,7 @@ dependencies:
   google_fonts: ^6.2.1
   share_plus: ^9.0.0
   path_provider: ^2.1.4
+  screenshot: ^3.0.0
   google_mobile_ads: ^5.1.0
   quick_board_core:
     path: ../../packages/quick_board_core

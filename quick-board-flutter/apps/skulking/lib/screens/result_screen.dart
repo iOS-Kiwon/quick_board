@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:quick_board_core/quick_board_core.dart';
 import '../l10n/app_localizations.dart';
@@ -19,7 +18,7 @@ class ResultScreen extends ConsumerStatefulWidget {
 }
 
 class _ResultScreenState extends ConsumerState<ResultScreen> {
-  final GlobalKey _captureKey = GlobalKey();
+  final ScreenshotController _screenshotController = ScreenshotController();
   bool _isSharing = false;
 
   @override
@@ -34,26 +33,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            RepaintBoundary(
-              key: _captureKey,
-              child: Container(
-                color: AppColors.background,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Text(
-                      l.finalResult,
-                      style: AppTextStyles.heading,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-                    _PodiumRow(standings: standings),
-                    const SizedBox(height: 24),
-                    _ResultTable(state: state),
-                  ],
-                ),
-              ),
-            ),
+            _ResultBody(state: state, standings: standings, l: l),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -64,7 +44,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                     variant: AppButtonVariant.ghost,
                     onPressed: _isSharing
                         ? null
-                        : () => _shareScreenshot(btnContext, l),
+                        : () => _shareScreenshot(btnContext, state, standings, l),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -92,23 +72,31 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     );
   }
 
-  Future<void> _shareScreenshot(BuildContext btnContext, AppLocalizations l) async {
+  Future<void> _shareScreenshot(
+    BuildContext btnContext,
+    SkulkingState state,
+    List<({String name, int total, int rank})> standings,
+    AppLocalizations l,
+  ) async {
     setState(() => _isSharing = true);
     try {
-      final boundary = _captureKey.currentContext?.findRenderObject()
-          as RenderRepaintBoundary?;
-      if (boundary == null) {
-        debugPrint('[Share] RepaintBoundary not found');
-        return;
-      }
+      final captureWidget = MediaQuery(
+        data: MediaQuery.of(context),
+        child: Theme(
+          data: AppTheme.dark,
+          child: Material(
+            color: AppColors.background,
+            child: _ResultBody(state: state, standings: standings, l: l),
+          ),
+        ),
+      );
 
-      final image = await boundary.toImage(pixelRatio: 3.0);
-      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final pngBytes = byteData?.buffer.asUint8List();
-      if (pngBytes == null) {
-        debugPrint('[Share] PNG bytes null');
-        return;
-      }
+      final pngBytes = await _screenshotController.captureFromWidget(
+        captureWidget,
+        pixelRatio: 3.0,
+        context: context,
+        delay: const Duration(milliseconds: 50),
+      );
 
       final dir = await getTemporaryDirectory();
       final file = File(
@@ -136,14 +124,47 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
   }
 }
 
-class _PodiumRow extends StatelessWidget {
-  const _PodiumRow({required this.standings});
+class _ResultBody extends StatelessWidget {
+  const _ResultBody({
+    required this.state,
+    required this.standings,
+    required this.l,
+  });
 
+  final SkulkingState state;
   final List<({String name, int total, int rank})> standings;
+  final AppLocalizations l;
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    return Container(
+      color: AppColors.background,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Text(
+            l.finalResult,
+            style: AppTextStyles.heading,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          _PodiumRow(standings: standings, l: l),
+          const SizedBox(height: 24),
+          _ResultTable(state: state, l: l),
+        ],
+      ),
+    );
+  }
+}
+
+class _PodiumRow extends StatelessWidget {
+  const _PodiumRow({required this.standings, required this.l});
+
+  final List<({String name, int total, int rank})> standings;
+  final AppLocalizations l;
+
+  @override
+  Widget build(BuildContext context) {
     const emojis = ['🥇', '🥈', '🥉'];
     return Wrap(
       alignment: WrapAlignment.center,
@@ -166,14 +187,14 @@ class _PodiumRow extends StatelessWidget {
 }
 
 class _ResultTable extends StatelessWidget {
-  const _ResultTable({required this.state});
+  const _ResultTable({required this.state, required this.l});
 
   final SkulkingState state;
+  final AppLocalizations l;
 
   @override
   Widget build(BuildContext context) {
     final totals = List.generate(state.players.length, state.totalScore);
-    final l = AppLocalizations.of(context)!;
 
     return LayoutBuilder(
       builder: (context, constraints) => SingleChildScrollView(
@@ -212,7 +233,7 @@ class _ResultTable extends StatelessWidget {
                       );
                     }),
                   ]);
-                }).whereType<DataRow>().toList(),
+                }).whereType<DataRow>(),
                 DataRow(
                   color: WidgetStateProperty.all(AppColors.card),
                   cells: [
