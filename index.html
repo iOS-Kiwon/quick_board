@@ -157,6 +157,25 @@
       line-height: 1.7;
     }
 
+    .footer-links {
+      margin-top: 40px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .footer-links a {
+      color: #6a6a6a;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: #c8a028; }
+    .footer-links span { color: #2a2a2a; }
+
   </style>
 </head>
 <body>
@@ -188,6 +207,14 @@
     </div>
   </section>
 
+  <nav class="footer-links">
+    <a href="/support/" id="link-support">고객 지원</a>
+    <span>·</span>
+    <a href="/privacy/" id="link-privacy">개인정보 처리방침</a>
+    <span>·</span>
+    <a href="/terms/" id="link-terms">이용약관</a>
+  </nav>
+
   <script>
     const i18n = {
       ko: {
@@ -200,6 +227,9 @@
         infoSkulkingDesc: '스컬킹(Skull King)은 2~8명이 즐기는 트릭 테이킹 보드게임입니다. 매 라운드 비드(예측 트릭 수)를 입력하면 점수를 자동으로 계산해 드립니다. 보너스 카드(해적, 인어, Skull King) 점수도 지원합니다.',
         infoYachtTitle: '🎲 요트 다이스 점수 계산기',
         infoYachtDesc: '요트 다이스(Yacht Dice)는 2~8명이 즐기는 주사위 보드게임입니다. 에이스부터 요트까지 12개 카테고리 점수를 입력하면 합계와 보너스(상단 합계 63점 이상 시 +35점)를 자동으로 계산합니다.',
+        linkSupport: '고객 지원',
+        linkPrivacy: '개인정보 처리방침',
+        linkTerms: '이용약관',
       },
       en: {
         title: 'Board Game Score Calculator',
@@ -211,6 +241,9 @@
         infoSkulkingDesc: 'Skull King is a trick-taking card game for 2–8 players. Enter your bid and tricks won each round — scores are calculated automatically, including bonuses for Pirates, Mermaids, and the Skull King card.',
         infoYachtTitle: '🎲 Yacht Dice Score Calculator',
         infoYachtDesc: 'Yacht Dice is a dice game for 2–8 players with 12 scoring categories (Aces through Yacht). Scores are tallied automatically, including the upper-section bonus (+35 points when upper total ≥ 63).',
+        linkSupport: 'Support',
+        linkPrivacy: 'Privacy Policy',
+        linkTerms: 'Terms of Service',
       }
     };
 
@@ -226,6 +259,9 @@
       document.getElementById('info-skulking-desc').textContent = t.infoSkulkingDesc;
       document.getElementById('info-yacht-title').textContent = t.infoYachtTitle;
       document.getElementById('info-yacht-desc').textContent = t.infoYachtDesc;
+      document.getElementById('link-support').textContent = t.linkSupport;
+      document.getElementById('link-privacy').textContent = t.linkPrivacy;
+      document.getElementById('link-terms').textContent = t.linkTerms;
       document.documentElement.lang = lang === 'en' ? 'en' : 'ko';
     }
 
