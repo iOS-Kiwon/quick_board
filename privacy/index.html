@@ -144,48 +144,63 @@
         title: '개인정보 처리방침',
         subtitle: 'QuickBoard · 시행일 2026-05-01',
         backLink: '← 메인으로',
-        s1h: '제1조 (수집하는 개인정보 항목)',
+        s1h: '제1조 (개요)',
         s1b: `
-          <p>QuickBoard(이하 ‘서비스’)는 별도의 회원가입이나 로그인 절차 없이 누구나 무료로 이용할 수 있는 보드게임 점수계산 서비스입니다. 서비스 운영자는 이용자로부터 직접 수집하는 개인정보가 없습니다.</p>
-          <p>다만, 서비스 이용 과정에서 다음 정보가 자동으로 수집될 수 있습니다.</p>
-          <ul>
-            <li>IP 주소, 쿠키, 광고 식별자(IDFA/AAID), 단말 기종, 브라우저 정보, 서비스 이용 기록</li>
-            <li>위 정보는 Google AdSense / AdMob 등 광고 파트너를 통해 자동 수집되어 광고 게재 및 통계 목적에 활용됩니다.</li>
-          </ul>`,
-        s2h: '제2조 (개인정보의 처리 목적)',
+          <p>QuickBoard(이하 ‘서비스’)는 보드게임 점수계산을 도와주는 무료 도구입니다. 서비스는 별도의 백엔드 서버나 사용자 분석 도구를 운영하지 않으며, 회원가입·로그인 절차도 없습니다.</p>
+          <p><strong>서비스 운영자는 이용자로부터 어떠한 개인정보도 직접 수집하지 않습니다.</strong></p>`,
+        s2h: '제2조 (제3자 광고 — Google AdSense / AdMob)',
         s2b: `
-          <p>자동 수집되는 정보는 다음 목적으로 처리됩니다.</p>
+          <p>서비스에는 운영 비용 충당을 위한 광고가 포함됩니다. 광고는 다음 Google 서비스를 통해 게재됩니다.</p>
           <ul>
-            <li>비개인화 광고 게재(맞춤형 광고 추적은 사용하지 않음)</li>
-            <li>서비스 안정성 확인, 부정 이용 방지, 통계 분석</li>
-          </ul>`,
-        s3h: '제3조 (보유 및 이용 기간)',
-        s3b: `
-          <p>광고 파트너가 자동 수집하는 정보는 해당 파트너의 정책에 따라 보유 및 처리됩니다. 자세한 내용은 다음을 참고하시기 바랍니다.</p>
+            <li>Google AdSense (웹사이트)</li>
+            <li>Google AdMob (iOS / Android 모바일 앱)</li>
+          </ul>
+          <p>Google은 광고 게재 과정에서 다음 정보를 직접 수집할 수 있습니다.</p>
+          <ul>
+            <li>IP 주소</li>
+            <li>쿠키 및 광고 식별자(IDFA, AAID)</li>
+            <li>단말 기종 및 브라우저 정보</li>
+            <li>서비스 이용 기록</li>
+          </ul>
+          <p>이 정보는 <strong>Google이 직접 수집·처리</strong>하며, QuickBoard 운영자는 해당 데이터에 접근하지 않습니다.</p>
+          <p>QuickBoard는 <strong>비개인화 광고(non-personalized ads)만</strong> 요청합니다.</p>
+          <p>자세한 내용:</p>
           <ul>
             <li>Google 개인정보처리방침: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a></li>
+            <li>Google 광고 파트너 사이트 정책: <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">policies.google.com/technologies/partner-sites</a></li>
+          </ul>`,
+        s3h: '제3조 (기기 내부 저장 데이터)',
+        s3b: `
+          <p>서비스 이용 과정에서 다음 데이터가 사용자 기기 내부에만 저장될 수 있으며, <strong>외부 서버로 전송되지 않습니다.</strong></p>
+          <ul>
+            <li>게임 진행 점수 — 앱 메모리 / 임시 저장</li>
+            <li>언어 설정(<code>quickboard.lang</code>) — 웹 브라우저 localStorage</li>
           </ul>
-          <p>점수 입력 데이터 등 게임 진행 정보는 외부 서버로 전송되지 않으며, 사용자 기기 내부에서만 임시 보관됩니다.</p>`,
-        s4h: '제4조 (개인정보의 제3자 제공)',
-        s4b: '<p>서비스는 이용자로부터 직접 수집한 개인정보가 없으므로 제3자에게 제공하는 개인정보가 없습니다. 광고 파트너의 자동 수집 정보는 해당 파트너의 정책을 따릅니다.</p>',
-        s5h: '제5조 (개인정보의 처리 위탁)',
-        s5b: '<p>현재 서비스는 별도의 개인정보 처리 위탁 업무를 두고 있지 않습니다. 사이트 호스팅은 GitHub Pages를 통해 제공됩니다.</p>',
-        s6h: '제6조 (이용자의 권리)',
-        s6b: `
-          <p>광고 식별자 추적 거부 및 비개인화 광고 설정은 단말 또는 브라우저 설정을 통해 변경할 수 있습니다.</p>
+          <p>브라우저 데이터(쿠키·로컬 저장소) 삭제 또는 앱 삭제 시 위 데이터는 함께 제거됩니다.</p>`,
+        s4h: '제4조 (호스팅 및 인프라)',
+        s4b: `
+          <ul>
+            <li>웹 사이트는 GitHub Pages(GitHub, Inc.)에서 호스팅됩니다. GitHub은 표준 서버 액세스 로그(IP, User-Agent 등)를 일정 기간 보유할 수 있으며, QuickBoard 운영자는 해당 로그에 접근하지 않습니다.</li>
+            <li>iOS / Android 앱은 각각 Apple App Store 및 Google Play Store에서 배포됩니다. 다운로드·설치 통계는 해당 플랫폼의 정책을 따릅니다.</li>
+          </ul>`,
+        s5h: '제5조 (이용자 권리 — 광고 추적 거부)',
+        s5b: `
+          <p>이용자는 아래 방법으로 광고 식별자 추적을 거부하거나 재설정할 수 있습니다.</p>
           <ul>
             <li>iOS: 설정 → 개인정보 보호 및 보안 → 추적 → 추적 요청 허용 끄기</li>
             <li>Android: 설정 → Google → 광고 → 광고 ID 재설정 / 맞춤설정 사용 안 함</li>
-            <li>웹: 브라우저 설정에서 쿠키 차단</li>
+            <li>웹: 브라우저 설정에서 쿠키 차단 또는 시크릿/개인정보 보호 모드 사용</li>
           </ul>`,
-        s7h: '제7조 (개인정보 보호책임자 및 문의처)',
+        s6h: '제6조 (만 14세 미만 아동)',
+        s6b: '<p>서비스는 회원가입 및 직접적인 개인정보 수집이 없으므로, 만 14세 미만 아동도 보호자 동의 절차 없이 이용할 수 있습니다. 다만 광고 게재 및 광고 식별자 사용에 우려가 있는 경우 보호자의 안내 하에 이용해 주시기 바랍니다.</p>',
+        s7h: '제7조 (문의처)',
         s7b: `
-          <p>개인정보 처리 관련 문의는 다음 채널로 접수해 주시기 바랍니다.</p>
+          <p>QuickBoard는 1인 운영 서비스이며, 개인정보 처리 관련 문의는 다음 채널로 접수해 주시기 바랍니다.</p>
           <ul>
             <li>지원 페이지: <a href="/support/">quickboard.club/support</a></li>
             <li>카카오톡 오픈채팅: <a href="https://open.kakao.com/o/sEf7kJsi" target="_blank" rel="noopener noreferrer">open.kakao.com/o/sEf7kJsi</a></li>
           </ul>`,
-        s8h: '제8조 (권익침해 구제 방법)',
+        s8h: '제8조 (권익침해 구제 — 대한민국)',
         s8b: `
           <p>개인정보 침해에 대한 신고나 상담이 필요한 경우 아래 기관에 문의하실 수 있습니다.</p>
           <ul>
@@ -203,50 +218,65 @@
         title: 'Privacy Policy',
         subtitle: 'QuickBoard · Effective from 2026-05-01',
         backLink: '← Back to Home',
-        s1h: 'Article 1 (Personal Information Collected)',
+        s1h: 'Article 1 (Overview)',
         s1b: `
-          <p>QuickBoard (the "Service") is a free board game score calculator available without registration or login. The Service operator does not directly collect personal information from users.</p>
-          <p>However, the following information may be automatically collected during use of the Service:</p>
-          <ul>
-            <li>IP address, cookies, advertising identifiers (IDFA/AAID), device model, browser information, usage logs</li>
-            <li>The above is automatically collected through advertising partners such as Google AdSense / AdMob and is used for ad serving and statistics.</li>
-          </ul>`,
-        s2h: 'Article 2 (Purpose of Processing)',
+          <p>QuickBoard (the "Service") is a free tool that helps you keep score for board games. The Service does not operate any backend server or analytics tool, and there is no account registration or login.</p>
+          <p><strong>The Service operator does not directly collect any personal information from users.</strong></p>`,
+        s2h: 'Article 2 (Third-Party Ads — Google AdSense / AdMob)',
         s2b: `
-          <p>Automatically collected information is processed for the following purposes:</p>
+          <p>The Service includes advertisements to support operating costs. Ads are delivered through the following Google services:</p>
           <ul>
-            <li>Non-personalized ad delivery (no personalized ad tracking is used)</li>
-            <li>Service stability monitoring, abuse prevention, and statistical analysis</li>
-          </ul>`,
-        s3h: 'Article 3 (Retention and Use Period)',
-        s3b: `
-          <p>Information automatically collected by advertising partners is retained and processed according to their policies. For details, please refer to:</p>
+            <li>Google AdSense (website)</li>
+            <li>Google AdMob (iOS / Android mobile apps)</li>
+          </ul>
+          <p>In the course of serving ads, Google may directly collect the following:</p>
+          <ul>
+            <li>IP address</li>
+            <li>Cookies and advertising identifiers (IDFA, AAID)</li>
+            <li>Device model and browser information</li>
+            <li>Service usage logs</li>
+          </ul>
+          <p>This information is <strong>collected and processed directly by Google</strong>. The QuickBoard operator does not have access to it.</p>
+          <p>QuickBoard requests <strong>non-personalized ads only</strong>.</p>
+          <p>For details:</p>
           <ul>
             <li>Google Privacy Policy: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a></li>
+            <li>How Google uses information from sites or apps that use our services: <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">policies.google.com/technologies/partner-sites</a></li>
+          </ul>`,
+        s3h: 'Article 3 (Locally Stored Data)',
+        s3b: `
+          <p>The following data may be stored only on your device during use of the Service and is <strong>never transmitted to any external server</strong>:</p>
+          <ul>
+            <li>In-progress game scores — kept in app memory / temporary storage</li>
+            <li>Language preference (<code>quickboard.lang</code>) — web browser localStorage</li>
           </ul>
-          <p>Game data such as score inputs is not transmitted to any external server and is stored only temporarily on the user's device.</p>`,
-        s4h: 'Article 4 (Disclosure to Third Parties)',
-        s4b: '<p>Since the Service does not directly collect personal information from users, no such information is disclosed to third parties. Information automatically collected by advertising partners is governed by the respective partner\'s policies.</p>',
-        s5h: 'Article 5 (Outsourcing of Processing)',
-        s5b: '<p>The Service does not currently outsource any personal data processing. Site hosting is provided via GitHub Pages.</p>',
-        s6h: 'Article 6 (User Rights)',
-        s6b: `
-          <p>You can opt out of advertising identifier tracking or enable non-personalized ads through your device or browser settings:</p>
+          <p>Clearing your browser data or uninstalling the app removes the above data as well.</p>`,
+        s4h: 'Article 4 (Hosting and Infrastructure)',
+        s4b: `
+          <ul>
+            <li>The website is hosted by GitHub Pages (GitHub, Inc.). GitHub may retain standard server access logs (IP, User-Agent, etc.) for a period; the QuickBoard operator does not access these logs.</li>
+            <li>The iOS / Android apps are distributed via the Apple App Store and Google Play Store. Download and installation statistics follow the respective platforms' policies.</li>
+          </ul>`,
+        s5h: 'Article 5 (User Rights — Opt-out of Ad Tracking)',
+        s5b: `
+          <p>You can opt out of advertising identifier tracking or reset it as follows:</p>
           <ul>
             <li>iOS: Settings → Privacy & Security → Tracking → Turn off "Allow Apps to Request to Track"</li>
             <li>Android: Settings → Google → Ads → Reset advertising ID / Opt out of personalization</li>
-            <li>Web: Block cookies in your browser settings</li>
+            <li>Web: Block cookies in your browser settings, or use Incognito/Private mode</li>
           </ul>`,
-        s7h: 'Article 7 (Privacy Officer and Contact)',
+        s6h: 'Article 6 (Children Under 14)',
+        s6b: '<p>The Service does not require account registration or directly collect personal information, so children under 14 may use it without parental consent. Parents are nevertheless encouraged to supervise use in light of advertising and advertising-identifier concerns.</p>',
+        s7h: 'Article 7 (Contact)',
         s7b: `
-          <p>For inquiries regarding personal data processing, please use one of the following channels:</p>
+          <p>QuickBoard is operated by a single individual. For inquiries regarding personal data, please use:</p>
           <ul>
             <li>Support page: <a href="/support/">quickboard.club/support</a></li>
             <li>KakaoTalk Open Chat: <a href="https://open.kakao.com/o/sEf7kJsi" target="_blank" rel="noopener noreferrer">open.kakao.com/o/sEf7kJsi</a></li>
           </ul>`,
-        s8h: 'Article 8 (Remedies for Privacy Violations)',
+        s8h: 'Article 8 (Remedies for Privacy Violations — Republic of Korea)',
         s8b: `
-          <p>If you need to report or consult about a privacy violation, you may contact the following Korean agencies:</p>
+          <p>For privacy violation reports or consultations, you may contact:</p>
           <ul>
             <li>Privacy Infringement Report Center (KISA): privacy.kisa.or.kr / 118</li>
             <li>Personal Information Dispute Mediation Committee: www.kopico.go.kr / 1833-6972</li>
