@@ -7,6 +7,7 @@ import 'package:quick_board_core/quick_board_core.dart';
 import 'l10n/app_localizations.dart';
 import 'router.dart';
 import 'theme/yacht_theme.dart';
+import 'utils/saved_lang.dart';
 import 'widgets/mobile_ad_banner.dart';
 
 void main() {
@@ -26,10 +27,12 @@ class YachtApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final savedLang = readSavedLang();
     return MaterialApp.router(
       routerConfig: appRouter,
       theme: YachtTheme.dark,
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
+      locale: savedLang != null ? Locale(savedLang) : null,
       builder: (context, child) => GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

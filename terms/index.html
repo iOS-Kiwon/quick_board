@@ -78,36 +78,44 @@
       position: fixed;
       top: 16px;
       right: 16px;
-      display: flex;
-      gap: 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
       background: #111;
       border: 1px solid #2a2a2a;
-      border-radius: 8px;
+      border-radius: 999px;
       padding: 3px;
+      cursor: pointer;
       z-index: 1000;
-    }
-    .lang-btn {
-      background: transparent;
-      border: none;
-      color: #6a6a6a;
       font-family: inherit;
+      transition: border-color 0.15s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .lang-toggle:hover { border-color: #c8a028; }
+    .lang-toggle:focus-visible { outline: 2px solid #c8a028; outline-offset: 2px; }
+    .lang-opt {
+      display: inline-block;
+      padding: 4px 12px;
       font-size: 0.8rem;
       font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.15s;
       letter-spacing: 0.5px;
+      color: #6a6a6a;
+      border-radius: 999px;
+      transition: background 0.2s, color 0.2s;
     }
-    .lang-btn:hover { color: #c8a028; }
-    .lang-btn.active { background: #c8a028; color: #0d0d0d; }
+    .lang-toggle.lang-ko .lang-opt[data-lang="ko"],
+    .lang-toggle.lang-en .lang-opt[data-lang="en"] {
+      background: #c8a028;
+      color: #0d0d0d;
+    }
   </style>
 </head>
 <body>
-  <div class="lang-toggle" role="group" aria-label="Language">
-    <button id="btn-ko" class="lang-btn" type="button">KO</button>
-    <button id="btn-en" class="lang-btn" type="button">EN</button>
-  </div>
+  <button class="lang-toggle" id="lang-toggle" type="button" role="switch" aria-label="Language toggle">
+    <span class="lang-opt" data-lang="ko">KO</span>
+    <span class="lang-opt" data-lang="en">EN</span>
+  </button>
 
   <div class="container">
     <a class="back-link" href="/" id="back-link">← 메인으로</a>
@@ -279,8 +287,9 @@
         document.getElementById(`s${i}-b`).innerHTML = t[`s${i}b`];
       }
       document.documentElement.lang = lang === 'en' ? 'en' : 'ko';
-      document.getElementById('btn-ko').classList.toggle('active', lang === 'ko');
-      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      const toggle = document.getElementById('lang-toggle');
+      toggle.className = 'lang-toggle lang-' + lang;
+      toggle.setAttribute('aria-checked', lang === 'en' ? 'true' : 'false');
     }
 
     function setLang(lang) {
@@ -297,8 +306,10 @@
       return browserLang.startsWith('ko') ? 'ko' : 'en';
     }
 
-    document.getElementById('btn-ko').addEventListener('click', () => setLang('ko'));
-    document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+      const current = document.documentElement.lang === 'en' ? 'en' : 'ko';
+      setLang(current === 'en' ? 'ko' : 'en');
+    });
     applyLang(getInitialLang());
   </script>
 </body>
