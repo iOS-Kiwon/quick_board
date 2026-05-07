@@ -41,6 +41,13 @@
       z-index: 9999;
     }
 
+    /* 광고 미게재(unfilled) 시 빈 영역 숨김 */
+    ins.adsbygoogle[data-ad-status="unfilled"] {
+      display: none !important;
+    }
+    /* 광고 로드 전/실패 시에도 빈 푸터 영역 노출 방지 */
+    #ad-footer { min-height: 0; }
+
     h1 {
       font-family: 'Cinzel', serif;
       font-size: clamp(1.8rem, 5vw, 2.6rem);
