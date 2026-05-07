@@ -29,6 +29,11 @@ class SkulkingApp extends StatelessWidget {
       routerConfig: appRouter,
       theme: AppTheme.dark,
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
+      builder: (context, child) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: child,
+      ),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

@@ -15,7 +15,7 @@ class PlayerNameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      maxLength: 12,
+      maxLength: 5,
       style: AppTextStyles.body,
       decoration: InputDecoration(
         labelText: label,

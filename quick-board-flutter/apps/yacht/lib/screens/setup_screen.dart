@@ -88,6 +88,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
                             child: TextField(
                               controller: _controllers[i],
                               focusNode: _focusNodes[i],
+                              maxLength: 5,
                               style: YachtTextStyles.body,
                               textInputAction: i < _playerCount - 1
                                   ? TextInputAction.next
@@ -99,6 +100,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
                               },
                               decoration: InputDecoration(
                                 labelText: l.playerName(i + 1),
+                                counterText: '',
                               ),
                             ),
                           ),

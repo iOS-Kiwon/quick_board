@@ -99,49 +99,116 @@ class _ScoreInputTableState extends State<ScoreInputTable> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        headingTextStyle: AppTextStyles.bodyDim,
-        dataTextStyle: AppTextStyles.body,
-        columnSpacing: 12,
-        columns: [
-          DataColumn(label: Text(l.playerHeader, style: AppTextStyles.bodyDim)),
-          DataColumn(label: Text(l.predictedWins, style: AppTextStyles.bodyDim), numeric: true),
-          DataColumn(label: Text(l.actualWins, style: AppTextStyles.bodyDim), numeric: true),
-          DataColumn(label: Text(l.bonus, style: AppTextStyles.bodyDim), numeric: true),
-          DataColumn(label: Text(l.roundScore, style: AppTextStyles.bodyDim), numeric: true),
-        ],
-        rows: List.generate(widget.players.length, (i) {
-          final saved = widget.savedScores[i];
-          final bonusApplies = saved != null &&
-              saved.predictedWins > 0 &&
-              saved.predictedWins == saved.actualWins;
 
-          return DataRow(cells: [
-            DataCell(Text(widget.players[i])),
-            DataCell(_numberField(_bidCtrl[i], i, focusNode: i == 0 ? _firstBidFocus : null)),
-            DataCell(_numberField(_tricksCtrl[i], i)),
-            DataCell(
-              Opacity(
-                opacity: bonusApplies ? 1.0 : 0.35,
-                child: _numberField(_bonusCtrl[i], i),
-              ),
+    return Column(
+      children: [
+        _headerRow(l),
+        const Divider(height: 1, color: AppColors.border),
+        ...List.generate(widget.players.length, (i) => _playerRow(i)),
+      ],
+    );
+  }
+
+  Widget _headerRow(AppLocalizations l) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              l.playerHeader,
+              style: AppTextStyles.bodyDim,
+              textAlign: TextAlign.center,
             ),
-            DataCell(
-              saved != null
-                  ? ScoreCard(score: saved.roundScore)
-                  : Text('—', style: AppTextStyles.bodyDim),
+          ),
+          Expanded(
+            child: Text(
+              l.predictedWins,
+              style: AppTextStyles.bodyDim,
+              textAlign: TextAlign.center,
             ),
-          ]);
-        }),
+          ),
+          Expanded(
+            child: Text(
+              l.actualWins,
+              style: AppTextStyles.bodyDim,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              l.bonus,
+              style: AppTextStyles.bodyDim,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              l.roundScore,
+              style: AppTextStyles.bodyDim,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _numberField(TextEditingController ctrl, int playerIndex, {FocusNode? focusNode}) {
-    return SizedBox(
-      width: 70,
+  Widget _playerRow(int i) {
+    final saved = widget.savedScores[i];
+    final bonusApplies = saved != null &&
+        saved.predictedWins > 0 &&
+        saved.predictedWins == saved.actualWins;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              widget.players[i],
+              style: AppTextStyles.body,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Expanded(
+            child: _numberField(
+              _bidCtrl[i],
+              i,
+              focusNode: i == 0 ? _firstBidFocus : null,
+            ),
+          ),
+          Expanded(child: _numberField(_tricksCtrl[i], i)),
+          Expanded(
+            child: Opacity(
+              opacity: bonusApplies ? 1.0 : 0.35,
+              child: _numberField(_bonusCtrl[i], i),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: saved != null
+                  ? ScoreCard(score: saved.roundScore)
+                  : Text('—', style: AppTextStyles.bodyDim),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _numberField(
+    TextEditingController ctrl,
+    int playerIndex, {
+    FocusNode? focusNode,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: TextField(
         controller: ctrl,
         focusNode: focusNode,

@@ -29,6 +29,12 @@ class YachtApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: appRouter,
       theme: YachtTheme.dark,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
+      builder: (context, child) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: child,
+      ),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
