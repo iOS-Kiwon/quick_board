@@ -73,9 +73,42 @@
     }
     footer a { color: #6a6a6a; }
     footer a:hover { color: #c8a028; }
+
+    .lang-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 2px;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 3px;
+      z-index: 1000;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: #6a6a6a;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.5px;
+    }
+    .lang-btn:hover { color: #c8a028; }
+    .lang-btn.active { background: #c8a028; color: #0d0d0d; }
   </style>
 </head>
 <body>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button id="btn-ko" class="lang-btn" type="button">KO</button>
+    <button id="btn-en" class="lang-btn" type="button">EN</button>
+  </div>
+
   <div class="container">
     <a class="back-link" href="/" id="back-link">← 메인으로</a>
 
@@ -219,6 +252,8 @@
       }
     };
 
+    const STORAGE_KEY = 'quickboard.lang';
+
     function applyLang(lang) {
       const t = i18n[lang] || i18n.ko;
       document.title = (lang === 'en' ? 'Privacy Policy — QuickBoard' : '개인정보 처리방침 — QuickBoard');
@@ -230,10 +265,27 @@
         document.getElementById(`s${i}-b`).innerHTML = t[`s${i}b`];
       }
       document.documentElement.lang = lang === 'en' ? 'en' : 'ko';
+      document.getElementById('btn-ko').classList.toggle('active', lang === 'ko');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
     }
 
-    const browserLang = (navigator.language || navigator.userLanguage || 'ko').toLowerCase();
-    applyLang(browserLang.startsWith('ko') ? 'ko' : 'en');
+    function setLang(lang) {
+      try { localStorage.setItem(STORAGE_KEY, lang); } catch (_) {}
+      applyLang(lang);
+    }
+
+    function getInitialLang() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored === 'ko' || stored === 'en') return stored;
+      } catch (_) {}
+      const browserLang = (navigator.language || navigator.userLanguage || 'ko').toLowerCase();
+      return browserLang.startsWith('ko') ? 'ko' : 'en';
+    }
+
+    document.getElementById('btn-ko').addEventListener('click', () => setLang('ko'));
+    document.getElementById('btn-en').addEventListener('click', () => setLang('en'));
+    applyLang(getInitialLang());
   </script>
 </body>
 </html>
