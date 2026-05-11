@@ -1,67 +1,507 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="/games/yacht/">
-
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yacht Dice Score Calculator — 요트 다이스 점수계산 · QuickBoard</title>
+  <meta name="description" content="Free online Yacht Dice score calculator for 2–8 players. Auto-scores all 12 categories with upper-bonus. Includes complete game rules, scoring guide, and strategy tips. 요트 다이스 무료 점수 계산기 + 게임 규칙·전략 가이드.">
+  <meta name="keywords" content="yacht dice, yacht dice score calculator, yacht dice scoresheet, yacht dice rules, yacht dice strategy, 요트다이스, 요트다이스 점수계산, 요트다이스 규칙, 보드게임 점수계산">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://quickboard.club/games/yacht/">
+  <meta property="og:title" content="Yacht Dice Score Calculator — 요트 다이스 점수계산">
+  <meta property="og:description" content="Free Yacht Dice score calculator with full game rules, scoring guide, and strategy tips.">
+  <meta property="og:url" content="https://quickboard.club/games/yacht/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:locale:alternate" content="en_US">
 
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="요트다이스">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <title>요트다이스 점수계산</title>
-  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5980133283002959"
        crossorigin="anonymous"></script>
 
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       background: #161010;
-      margin: 0;
+      color: #c9bfa8;
+      font-family: 'Rajdhani', sans-serif;
+      line-height: 1.7;
+      padding-bottom: 80px;
     }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 24px 16px; }
+
+    .back-link {
+      display: inline-block;
+      color: #6a6a6a;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: #cc2222; }
+
+    h1.page-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      color: #ff4444;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .page-subtitle {
+      font-size: 1rem;
+      color: #aa8888;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .calculator-frame {
+      background: #241818;
+      border: 1px solid #553030;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 32px 0;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+    }
+    .calculator-frame iframe {
+      display: block;
+      width: 100%;
+      height: 720px;
+      border: 0;
+      background: #161010;
+    }
+
+    section.guide {
+      margin-bottom: 28px;
+      padding: 24px;
+      background: #1c1414;
+      border: 1px solid #2e1f1f;
+      border-radius: 10px;
+    }
+
+    section.guide h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: #ff4444;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    section.guide h3 {
+      font-size: 1rem;
+      color: #ee8888;
+      margin: 16px 0 8px;
+    }
+
+    section.guide p { color: #c0a8a8; font-size: 0.97rem; margin-bottom: 10px; }
+    section.guide ul, section.guide ol { padding-left: 22px; margin-bottom: 10px; }
+    section.guide li { color: #c0a8a8; font-size: 0.95rem; margin-bottom: 4px; }
+    section.guide strong { color: #ffaaaa; }
+
+    .category-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 0.92rem;
+    }
+    .category-table th,
+    .category-table td {
+      border: 1px solid #2e1f1f;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .category-table th {
+      background: #2e1f1f;
+      color: #ff4444;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+    }
+    .category-table td { color: #c0a8a8; }
+
+    .faq-item { border-top: 1px solid #2e1f1f; padding: 14px 0; }
+    .faq-item:first-of-type { border-top: 0; padding-top: 0; }
+    .faq-item:last-of-type  { padding-bottom: 0; }
+    .faq-q { font-weight: 600; color: #ff4444; margin-bottom: 4px; }
+    .faq-a { color: #c0a8a8; font-size: 0.95rem; }
+
+    .footer-links {
+      margin-top: 32px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    .footer-links a { color: #6a6a6a; text-decoration: none; transition: color 0.15s; }
+    .footer-links a:hover { color: #cc2222; }
+    .footer-links span { color: #2a2a2a; }
+
+    .lang-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      display: inline-flex;
+      align-items: center;
+      background: #1c1414;
+      border: 1px solid #2e1f1f;
+      border-radius: 999px;
+      padding: 3px;
+      cursor: pointer;
+      z-index: 1000;
+      font-family: inherit;
+      transition: border-color 0.15s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .lang-toggle:hover { border-color: #cc2222; }
+    .lang-toggle:focus-visible { outline: 2px solid #cc2222; outline-offset: 2px; }
+    .lang-opt {
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #6a6a6a;
+      border-radius: 999px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .lang-toggle.lang-ko .lang-opt[data-lang="ko"],
+    .lang-toggle.lang-en .lang-opt[data-lang="en"] {
+      background: #cc2222;
+      color: #fff;
+    }
+
     #ad-footer {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       background: #161010;
+      border-top: 1px solid #2a1818;
       z-index: 9999;
     }
+    ins.adsbygoogle[data-ad-status="unfilled"] { display: none !important; }
+    #ad-footer { min-height: 0; }
   </style>
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <button class="lang-toggle" id="lang-toggle" type="button" role="switch" aria-label="Language toggle">
+    <span class="lang-opt" data-lang="ko">KO</span>
+    <span class="lang-opt" data-lang="en">EN</span>
+  </button>
 
-  <!-- AdSense 하단 배너 -->
+  <div class="container">
+    <a class="back-link" href="/" id="back-link">← 메인으로</a>
+
+    <h1 class="page-title" id="page-title"></h1>
+    <p class="page-subtitle" id="page-subtitle"></p>
+
+    <section class="guide">
+      <h2 id="intro-h"></h2>
+      <div id="intro-b"></div>
+    </section>
+
+    <section class="guide">
+      <h2 id="howto-h"></h2>
+      <div id="howto-b"></div>
+    </section>
+
+    <section class="guide">
+      <h2 id="cats-h"></h2>
+      <div id="cats-b"></div>
+    </section>
+
+    <div class="calculator-frame">
+      <iframe
+        id="calc-frame"
+        src="app/"
+        title="Yacht Dice Score Calculator"
+        loading="lazy"
+        scrolling="no"></iframe>
+    </div>
+
+    <section class="guide">
+      <h2 id="example-h"></h2>
+      <div id="example-b"></div>
+    </section>
+
+    <section class="guide">
+      <h2 id="strategy-h"></h2>
+      <div id="strategy-b"></div>
+    </section>
+
+    <section class="guide">
+      <h2 id="faq-h"></h2>
+      <div id="faq-list"></div>
+    </section>
+
+    <nav class="footer-links">
+      <a href="/support/" id="link-support">고객 지원</a>
+      <span>·</span>
+      <a href="/privacy/" id="link-privacy">개인정보 처리방침</a>
+      <span>·</span>
+      <a href="/terms/" id="link-terms">이용약관</a>
+    </nav>
+  </div>
+
   <div id="ad-footer">
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="ca-pub-5980133283002959"
          data-ad-slot="6064000020"
-         data-ad-format="auto"
+         data-ad-format="horizontal"
          data-full-width-responsive="true"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
+
+  <script>
+    const i18n = {
+      ko: {
+        backLink: '← 메인으로',
+        pageTitle: '🎲 요트 다이스 점수 계산기',
+        pageSubtitle: 'Yacht Dice · 5개 주사위 · 12개 카테고리 · 2~8인',
+
+        introH: '게임 소개',
+        introB: `
+          <p>요트 다이스(Yacht Dice)는 5개의 주사위로 12개 카테고리를 채우며 점수를 겨루는 클래식 보드게임입니다. 야찌(Yahtzee), 야츠(Yatzy) 등 유사한 룰을 가진 게임 계열의 한국식 변형이며, 운과 전략이 적절히 섞여 누구나 쉽게 즐길 수 있습니다.</p>
+          <p>이 점수 계산기는 <strong>최대 8명</strong>까지 멀티플레이를 지원하며, 카테고리별 점수 입력만으로 <strong>상단 보너스(+35점)와 총점</strong>을 자동 계산해 드립니다. 실물 주사위로 게임을 진행하면서 종이 스코어시트 대신 사용하실 수 있습니다.</p>`,
+
+        howtoH: '게임 진행 방식',
+        howtoB: `
+          <ol>
+            <li>각 턴마다 5개의 주사위를 굴립니다.</li>
+            <li>원하는 주사위는 남기고, 나머지를 다시 굴릴 수 있습니다. <strong>최대 3번까지 굴림</strong> 가능합니다.</li>
+            <li>굴림이 끝나면 12개 카테고리 중 하나를 선택해 점수를 기록합니다.</li>
+            <li>각 카테고리는 게임당 <strong>한 번만</strong> 사용할 수 있습니다.</li>
+            <li>12라운드 후 모든 카테고리가 채워지면 게임이 종료되며, 합산 점수가 가장 높은 사람이 승리합니다.</li>
+          </ol>`,
+
+        catsH: '카테고리와 점수 계산법',
+        catsB: `
+          <h3>상단 섹션 (Upper Section)</h3>
+          <table class="category-table">
+            <thead><tr><th>카테고리</th><th>점수 계산</th><th>최대</th></tr></thead>
+            <tbody>
+              <tr><td>Aces (에이스)</td><td>1이 나온 주사위 합산</td><td>5</td></tr>
+              <tr><td>Duals (듀얼)</td><td>2가 나온 주사위 합산</td><td>10</td></tr>
+              <tr><td>Triples (트리플)</td><td>3이 나온 주사위 합산</td><td>15</td></tr>
+              <tr><td>Quads (쿼드)</td><td>4가 나온 주사위 합산</td><td>20</td></tr>
+              <tr><td>Penta (펜타)</td><td>5가 나온 주사위 합산</td><td>25</td></tr>
+              <tr><td>Hexa (헥사)</td><td>6이 나온 주사위 합산</td><td>30</td></tr>
+            </tbody>
+          </table>
+          <p><strong>상단 보너스</strong>: 상단 6개 카테고리 합계가 63점 이상이면 자동으로 +35점이 추가됩니다.</p>
+
+          <h3>하단 섹션 (Lower Section)</h3>
+          <table class="category-table">
+            <thead><tr><th>카테고리</th><th>점수 계산</th><th>최대</th></tr></thead>
+            <tbody>
+              <tr><td>Choice (초이스)</td><td>주사위 5개 합산</td><td>30</td></tr>
+              <tr><td>Poker (포커, 4 of a kind)</td><td>같은 눈 4개의 합산 (5번째 제외)</td><td>24</td></tr>
+              <tr><td>Full House (풀하우스, 3+2)</td><td>주사위 5개 합산 (3+2 조합 시)</td><td>28</td></tr>
+              <tr><td>Small Straight (스몰)</td><td>연속 4개 이상 → 고정</td><td>30</td></tr>
+              <tr><td>Large Straight (라지)</td><td>연속 5개 → 고정</td><td>30</td></tr>
+              <tr><td>Yacht (요트, 5 of a kind)</td><td>5개 모두 같은 눈 → 고정</td><td>50</td></tr>
+            </tbody>
+          </table>`,
+
+        exampleH: '점수 계산 예시',
+        exampleB: `
+          <p>주사위 결과: <strong>1, 1, 4, 4, 6</strong> 일 때 카테고리별 점수</p>
+          <ul>
+            <li>Aces → 1+1 = <strong>2점</strong></li>
+            <li>Quads → 4+4 = <strong>8점</strong></li>
+            <li>Choice → 1+1+4+4+6 = <strong>16점</strong></li>
+            <li>Full House → 3+2 조합 아님 → <strong>0점</strong></li>
+            <li>Small Straight → 연속 4개 없음 → <strong>0점</strong></li>
+          </ul>
+          <p>주사위 결과: <strong>3, 3, 3, 3, 5</strong> 일 때</p>
+          <ul>
+            <li>Triples → 3+3+3+3 = <strong>12점</strong></li>
+            <li>Poker → 3+3+3+3 = <strong>12점</strong> (5번째 주사위 제외)</li>
+            <li>Yacht → 5개 모두 같지 않음 → <strong>0점</strong></li>
+          </ul>`,
+
+        strategyH: '전략 팁',
+        strategyB: `
+          <ul>
+            <li><strong>상단 보너스(+35점)는 사실상 필수</strong>: Aces~Hexa에서 평균 3개씩 매칭하면 63점을 달성할 수 있습니다.</li>
+            <li><strong>요트(50점)는 도전 가치 있음</strong>: 첫 굴림에서 같은 눈 3~4개가 나오면 적극적으로 시도해보세요.</li>
+            <li><strong>스트레이트는 안전 카테고리</strong>: 점수가 고정(30점)이므로 변동 위험이 없습니다.</li>
+            <li><strong>풀하우스 vs 포커</strong>: 3개+2개 조합이면 풀하우스(28점 가능), 4개 매칭이면 포커가 유리합니다.</li>
+            <li><strong>0점 처리 카테고리 선정</strong>: 마지막 라운드까지 채우기 어려운 카테고리는 일찍 0점으로 비워두는 것이 종합 점수에 유리할 수 있습니다.</li>
+            <li><strong>초이스(최대 30점)는 종료 보험</strong>: 막판에 점수가 부족한 카테고리가 남았을 때 활용하세요.</li>
+          </ul>`,
+
+        faqH: '자주 묻는 질문',
+        faqs: [
+          { q: '한 게임이 얼마나 걸리나요?', a: '4명 기준 약 20~30분 정도 소요됩니다. 인원이 많을수록 시간이 늘어납니다.' },
+          { q: '실물 주사위가 필요한가요?', a: '네, 본 서비스는 점수 입력 보조 도구입니다. 주사위를 직접 굴려서 게임을 진행한 뒤, 결과를 입력해 주세요.' },
+          { q: '게임 도중 점수를 잘못 입력했어요. 수정할 수 있나요?', a: '네, 카테고리 셀을 다시 탭하여 값을 변경할 수 있습니다. 보너스와 총점이 자동으로 재계산됩니다.' },
+          { q: '게임 결과를 저장하거나 공유할 수 있나요?', a: '게임 종료 후 \'결과 공유\' 버튼을 통해 결과 화면을 이미지로 저장하거나 다른 앱으로 공유할 수 있습니다.' },
+          { q: '점수 데이터가 외부로 전송되나요?', a: '아니요. 진행 중인 게임 데이터는 브라우저(또는 앱) 내부에만 임시 저장되며, 외부 서버로 전송되지 않습니다.' },
+          { q: '모바일 앱도 있나요?', a: '네, iOS와 Android 앱이 준비 중이며, 출시 후 본 페이지에서 안내드립니다.' },
+          { q: '한국 룰과 야츠(Yatzy) 룰의 차이는 무엇인가요?', a: '주요 차이는 보너스 조건과 풀하우스 점수입니다. 야츠는 풀하우스가 25점 고정이지만, 한국형 요트 다이스는 5개 주사위 합산(최대 28점)으로 계산합니다.' },
+        ],
+
+        linkSupport: '고객 지원',
+        linkPrivacy: '개인정보 처리방침',
+        linkTerms: '이용약관',
+      },
+      en: {
+        backLink: '← Back to Home',
+        pageTitle: '🎲 Yacht Dice Score Calculator',
+        pageSubtitle: 'Yacht Dice · 5 dice · 12 categories · 2–8 players',
+
+        introH: 'About the Game',
+        introB: `
+          <p>Yacht Dice is a classic dice game where players roll 5 dice and try to fill 12 scoring categories. It belongs to the Yahtzee / Yatzy family and balances luck with strategy, making it accessible to players of all ages.</p>
+          <p>This calculator supports up to <strong>8 players</strong> and automatically computes the <strong>upper-section bonus (+35 points)</strong> and final totals. Use it alongside physical dice to replace the paper scoresheet.</p>`,
+
+        howtoH: 'How to Play',
+        howtoB: `
+          <ol>
+            <li>Each turn, roll 5 dice.</li>
+            <li>Keep the dice you want and re-roll the rest. You may roll <strong>up to 3 times</strong> per turn.</li>
+            <li>After your final roll, pick one category to score.</li>
+            <li>Each category can be used <strong>only once</strong> per game.</li>
+            <li>After 12 rounds (when all categories are filled), the player with the highest total wins.</li>
+          </ol>`,
+
+        catsH: 'Categories and Scoring',
+        catsB: `
+          <h3>Upper Section</h3>
+          <table class="category-table">
+            <thead><tr><th>Category</th><th>Scoring</th><th>Max</th></tr></thead>
+            <tbody>
+              <tr><td>Aces</td><td>Sum of dice showing 1</td><td>5</td></tr>
+              <tr><td>Duals</td><td>Sum of dice showing 2</td><td>10</td></tr>
+              <tr><td>Triples</td><td>Sum of dice showing 3</td><td>15</td></tr>
+              <tr><td>Quads</td><td>Sum of dice showing 4</td><td>20</td></tr>
+              <tr><td>Penta</td><td>Sum of dice showing 5</td><td>25</td></tr>
+              <tr><td>Hexa</td><td>Sum of dice showing 6</td><td>30</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Upper Bonus</strong>: If the sum of the 6 upper-section categories is 63 or more, you automatically earn +35 points.</p>
+
+          <h3>Lower Section</h3>
+          <table class="category-table">
+            <thead><tr><th>Category</th><th>Scoring</th><th>Max</th></tr></thead>
+            <tbody>
+              <tr><td>Choice</td><td>Sum of all 5 dice</td><td>30</td></tr>
+              <tr><td>Poker (4 of a kind)</td><td>Sum of 4 matching dice (excludes 5th)</td><td>24</td></tr>
+              <tr><td>Full House (3+2)</td><td>Sum of all 5 dice when arranged as 3+2</td><td>28</td></tr>
+              <tr><td>Small Straight</td><td>4 in a row → fixed</td><td>30</td></tr>
+              <tr><td>Large Straight</td><td>5 in a row → fixed</td><td>30</td></tr>
+              <tr><td>Yacht (5 of a kind)</td><td>All 5 dice match → fixed</td><td>50</td></tr>
+            </tbody>
+          </table>`,
+
+        exampleH: 'Scoring Examples',
+        exampleB: `
+          <p>Dice: <strong>1, 1, 4, 4, 6</strong></p>
+          <ul>
+            <li>Aces → 1+1 = <strong>2 pts</strong></li>
+            <li>Quads → 4+4 = <strong>8 pts</strong></li>
+            <li>Choice → 1+1+4+4+6 = <strong>16 pts</strong></li>
+            <li>Full House → Not a 3+2 → <strong>0 pts</strong></li>
+            <li>Small Straight → No 4-in-a-row → <strong>0 pts</strong></li>
+          </ul>
+          <p>Dice: <strong>3, 3, 3, 3, 5</strong></p>
+          <ul>
+            <li>Triples → 3+3+3+3 = <strong>12 pts</strong></li>
+            <li>Poker → 3+3+3+3 = <strong>12 pts</strong> (5th die excluded)</li>
+            <li>Yacht → Not all 5 the same → <strong>0 pts</strong></li>
+          </ul>`,
+
+        strategyH: 'Strategy Tips',
+        strategyB: `
+          <ul>
+            <li><strong>The upper bonus (+35) is practically essential</strong>: Averaging 3 matching dice across Aces–Hexa hits the 63-point threshold.</li>
+            <li><strong>Yacht (50 pts) is worth attempting</strong>: If your first roll shows 3–4 of a kind, go for it aggressively.</li>
+            <li><strong>Straights are safe categories</strong>: Fixed 30 points means no variance risk.</li>
+            <li><strong>Full House vs Poker</strong>: With a 3+2 split, Full House is better; with 4 of a kind, Poker wins.</li>
+            <li><strong>Zero scoring is a strategic move</strong>: Sometimes it's better to zero out a tough category early than to leave it for late.</li>
+            <li><strong>Choice (max 30) is your insurance</strong>: Save it for the end when you're stuck with a low-value roll.</li>
+          </ul>`,
+
+        faqH: 'Frequently Asked Questions',
+        faqs: [
+          { q: 'How long does a game take?', a: 'About 20–30 minutes for 4 players. Longer with more players.' },
+          { q: 'Do I need physical dice?', a: 'Yes — this is a score-tracking aid. Roll your own dice and enter the results here.' },
+          { q: 'I entered a wrong score. Can I fix it?', a: 'Yes, tap the category cell again to change the value. Bonus and totals will recalculate automatically.' },
+          { q: 'Can I save or share the game results?', a: 'After the game ends, tap "Share Results" to save the result screen as an image or share to another app.' },
+          { q: 'Is my score data sent anywhere?', a: 'No. Game progress is stored only in your browser (or app) and is never transmitted externally.' },
+          { q: 'Is there a mobile app?', a: 'Yes — iOS and Android apps are in preparation. We will announce them on this page when available.' },
+          { q: 'How does Yacht Dice differ from Yatzy?', a: 'The main differences are bonus thresholds and Full House scoring. Yatzy fixes Full House at 25; Yacht Dice sums all 5 dice (max 28).' },
+        ],
+
+        linkSupport: 'Support',
+        linkPrivacy: 'Privacy Policy',
+        linkTerms: 'Terms of Service',
+      }
+    };
+
+    const STORAGE_KEY = 'quickboard.lang';
+
+    function applyLang(lang) {
+      const t = i18n[lang] || i18n.ko;
+
+      document.title = (lang === 'en'
+        ? 'Yacht Dice Score Calculator — QuickBoard'
+        : 'Yacht Dice Score Calculator — 요트 다이스 점수계산 · QuickBoard');
+
+      document.getElementById('back-link').textContent = t.backLink;
+      document.getElementById('page-title').textContent = t.pageTitle;
+      document.getElementById('page-subtitle').textContent = t.pageSubtitle;
+
+      ['intro', 'howto', 'cats', 'example', 'strategy', 'faq'].forEach(k => {
+        document.getElementById(`${k}-h`).textContent = t[`${k}H`];
+      });
+      ['intro', 'howto', 'cats', 'example', 'strategy'].forEach(k => {
+        document.getElementById(`${k}-b`).innerHTML = t[`${k}B`];
+      });
+
+      document.getElementById('faq-list').innerHTML = t.faqs.map(f =>
+        `<div class="faq-item"><div class="faq-q">Q. ${f.q}</div><div class="faq-a">A. ${f.a}</div></div>`
+      ).join('');
+
+      document.getElementById('link-support').textContent = t.linkSupport;
+      document.getElementById('link-privacy').textContent = t.linkPrivacy;
+      document.getElementById('link-terms').textContent = t.linkTerms;
+
+      document.documentElement.lang = lang === 'en' ? 'en' : 'ko';
+      const toggle = document.getElementById('lang-toggle');
+      toggle.className = 'lang-toggle lang-' + lang;
+      toggle.setAttribute('aria-checked', lang === 'en' ? 'true' : 'false');
+    }
+
+    function setLang(lang) {
+      try { localStorage.setItem(STORAGE_KEY, lang); } catch (_) {}
+      applyLang(lang);
+    }
+
+    function getInitialLang() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored === 'ko' || stored === 'en') return stored;
+      } catch (_) {}
+      const browserLang = (navigator.language || navigator.userLanguage || 'ko').toLowerCase();
+      return browserLang.startsWith('ko') ? 'ko' : 'en';
+    }
+
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+      const current = document.documentElement.lang === 'en' ? 'en' : 'ko';
+      setLang(current === 'en' ? 'ko' : 'en');
+    });
+    applyLang(getInitialLang());
+  </script>
 </body>
 </html>

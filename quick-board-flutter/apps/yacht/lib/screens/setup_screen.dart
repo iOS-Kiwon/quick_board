@@ -57,8 +57,21 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
 
     return Scaffold(
       backgroundColor: YachtColors.background,
-      bottomNavigationBar: const AdBannerWidget(),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+              child: YachtButton(label: l.startGame, onPressed: _startGame),
+            ),
+            const AdBannerWidget(),
+          ],
+        ),
+      ),
       body: SafeArea(
+        bottom: false,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Column(
@@ -110,8 +123,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              YachtButton(label: l.startGame, onPressed: _startGame),
             ],
           ),
         ),
