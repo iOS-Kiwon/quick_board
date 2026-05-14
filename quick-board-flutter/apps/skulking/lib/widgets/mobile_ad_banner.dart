@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../utils/tracking.dart';
 
 /// AdMob 배너 위젯 (iOS/Android 전용)
 /// main.dart에서 AdBannerWidget.mobileAdBuilder = () => const MobileAdBanner(); 로 등록
@@ -35,10 +36,12 @@ class _MobileAdBannerState extends State<MobileAdBanner> {
     _loadAd();
   }
 
-  void _loadAd() {
+  Future<void> _loadAd() async {
+    final authorized = await isTrackingAuthorized();
+    if (!mounted) return;
     _bannerAd = BannerAd(
       adUnitId: _adUnitId,
-      request: const AdRequest(nonPersonalizedAds: true),
+      request: AdRequest(nonPersonalizedAds: !authorized),
       size: AdSize.banner,
       listener: BannerAdListener(
         onAdLoaded: (_) => setState(() => _isLoaded = true),

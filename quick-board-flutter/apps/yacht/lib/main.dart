@@ -8,18 +8,23 @@ import 'l10n/app_localizations.dart';
 import 'router.dart';
 import 'theme/yacht_theme.dart';
 import 'utils/saved_lang.dart';
+import 'utils/tracking.dart';
 import 'widgets/mobile_ad_banner.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (!kIsWeb) {
-    // TODO: 프로덕션 배포 전 실제 AdMob App ID로 Info.plist / AndroidManifest.xml 설정 필요
     MobileAds.instance.initialize();
     AdBannerWidget.mobileAdBuilder = () => const MobileAdBanner();
   }
 
   runApp(const ProviderScope(child: YachtApp()));
+
+  // ATT 다이얼로그는 앱이 frontmost 상태가 된 뒤에만 표시되므로 첫 프레임 이후에 요청한다.
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    requestTrackingPermission();
+  });
 }
 
 class YachtApp extends StatelessWidget {
@@ -29,6 +34,7 @@ class YachtApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final savedLang = readSavedLang();
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       routerConfig: appRouter,
       theme: YachtTheme.dark,
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,

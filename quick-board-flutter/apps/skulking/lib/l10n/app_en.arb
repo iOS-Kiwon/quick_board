@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appName": "Skull King Score",
+  "appName": "SkullKing Score",
   "setupTitle": "☠️ Game Setup",
   "playerCount": "Number of Players",
   "playerCountSuffix": "{n} players",
