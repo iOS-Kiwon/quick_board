@@ -219,13 +219,13 @@ class _ScoreInputBottomSheetState extends State<ScoreInputBottomSheet> {
           Row(
             children: [
               Expanded(
-                child: OutlinedButton(
+                child: ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: YachtColors.border),
-                    foregroundColor: YachtColors.textDim,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: YachtColors.primary,
+                    foregroundColor: YachtColors.text,
                   ),
-                  child: Text(l.cancelButton, style: YachtTextStyles.button.copyWith(color: YachtColors.textDim)),
+                  child: Text(l.cancelButton, style: YachtTextStyles.button),
                 ),
               ),
               const SizedBox(width: 12),
