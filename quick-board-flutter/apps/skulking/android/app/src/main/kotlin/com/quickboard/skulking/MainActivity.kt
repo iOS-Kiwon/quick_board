@@ -1,4 +1,4 @@
-package com.example.skulking
+package com.quickboard.skulking
 
 import io.flutter.embedding.android.FlutterActivity
 
