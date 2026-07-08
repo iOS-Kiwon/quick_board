@@ -48,6 +48,7 @@ jobs:
           cp sitemap.xml _site/sitemap.xml
           cp robots.txt _site/robots.txt
           cp ads.txt _site/ads.txt
+          cp app-ads.txt _site/app-ads.txt
           cp -r support _site/support
           cp -r privacy _site/privacy
           cp -r terms _site/terms
