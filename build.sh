@@ -10,9 +10,9 @@
 #   ./build.sh aab                # Android AAB만
 #
 # 출시 빌드:
-#   ./build.sh android release    # 버전 입력 -> pubspec 갱신 -> Android AAB/APK 광고 ON 빌드
-#   ./build.sh aab release        # 버전 입력 -> pubspec 갱신 -> Android AAB 광고 ON 빌드
-#   ./build.sh ios release        # 버전 입력 -> pubspec 갱신 -> iOS no-codesign 광고 ON 빌드
+#   ./build.sh android release    # 버전 입력 -> pubspec 갱신 -> Play 심사용 AAB 광고 ON 빌드
+#   ./build.sh aab release        # 버전 입력 -> pubspec 갱신 -> Play 심사용 AAB 광고 ON 빌드
+#   ./build.sh ios release        # 버전 입력 -> pubspec 갱신 -> App Store 심사용 IPA 광고 ON 빌드
 #
 # 환경 변수:
 #   SHOW_ADMOB=true|false         # release 빌드는 기본 true, 그 외 빌드는 기본 false
@@ -224,13 +224,23 @@ build_ios() {
     warn "CocoaPods가 없어 iOS 빌드가 실패할 수 있습니다."
   fi
 
-  info "iOS no-codesign 빌드: kind=$BUILD_KIND, SHOW_ADMOB=$SHOW_ADMOB"
-  if flutter build ios --release --no-codesign "$dart_define"; then
-    info "iOS app: $APP_DIR/build/ios/iphoneos/Skulking.app"
-    info "IPA 출시 빌드: flutter build ipa --release $dart_define"
+  if [ "$BUILD_KIND" = "release" ]; then
+    info "iOS App Store 심사용 IPA 빌드: SHOW_ADMOB=$SHOW_ADMOB"
+    if flutter build ipa --release "$dart_define"; then
+      info "IPA: $APP_DIR/build/ios/ipa"
+    else
+      err "iOS IPA 빌드 실패"
+      FAIL=1
+    fi
   else
-    err "iOS 빌드 실패"
-    FAIL=1
+    info "iOS no-codesign 빌드: kind=$BUILD_KIND, SHOW_ADMOB=$SHOW_ADMOB"
+    if flutter build ios --release --no-codesign "$dart_define"; then
+      info "iOS app: $APP_DIR/build/ios/iphoneos/Skulking.app"
+      info "심사용 IPA: ./build.sh ios release"
+    else
+      err "iOS 빌드 실패"
+      FAIL=1
+    fi
   fi
 }
 
@@ -241,8 +251,24 @@ fi
 run_pub_get
 
 case "$TARGET" in
-  all)       build_aab; build_apk; build_ios ;;
-  android)   build_aab; build_apk ;;
+  all)
+    if [ "$BUILD_KIND" = "release" ]; then
+      build_aab
+      build_ios
+    else
+      build_aab
+      build_apk
+      build_ios
+    fi
+    ;;
+  android)
+    if [ "$BUILD_KIND" = "release" ]; then
+      build_aab
+    else
+      build_aab
+      build_apk
+    fi
+    ;;
   apk)       build_apk ;;
   aab)       build_aab ;;
   appbundle) warn "'appbundle' 대신 'aab'를 사용하세요."; build_aab ;;

@@ -21,9 +21,9 @@ Quick Board 저장소 안의 **스컬킹 점수계산** Flutter 앱을 iOS·Andr
 ./build.sh apk              # Android APK만 빌드
 ./build.sh ios              # iOS no-codesign 빌드
 
-./build.sh android release  # 출시 빌드: 버전 입력 -> AAB/APK 광고 ON 빌드 -> 버전 커밋
-./build.sh aab release      # 출시 빌드: 버전 입력 -> AAB 광고 ON 빌드 -> 버전 커밋
-./build.sh ios release      # 출시 빌드: 버전 입력 -> iOS 광고 ON 빌드 -> 버전 커밋
+./build.sh android release  # 심사 제출용: 버전 입력 -> Play AAB 광고 ON 빌드 -> 버전 커밋
+./build.sh aab release      # 심사 제출용: 버전 입력 -> Play AAB 광고 ON 빌드 -> 버전 커밋
+./build.sh ios release      # 심사 제출용: 버전 입력 -> App Store IPA 광고 ON 빌드 -> 버전 커밋
 
 ./run.sh                    # 연결된 첫 기기에서 release 실행
 ./run.sh android            # 첫 Android 기기/에뮬레이터에서 실행
@@ -73,7 +73,7 @@ cd quick-board-flutter/apps/skulking
 flutter build apk --release
 flutter build appbundle --release
 
-# 출시용: 광고 ON
+# 출시/심사용: 광고 ON
 flutter build appbundle --release --dart-define=SHOW_ADMOB=true
 ```
 
@@ -108,19 +108,20 @@ flutter build ios --release --no-codesign
 스토어 업로드용 IPA는 Xcode 서명 설정 후 실행합니다.
 
 ```bash
-flutter build ipa --release --dart-define=SHOW_ADMOB=true
+./build.sh ios release
 ```
 
 ## 출시 빌드 버전 입력
 
-`./build.sh <target> release` 형식으로 실행하면 스크립트가 현재 `pubspec.yaml`의 `version`을 읽고 새 앱 버전과 빌드번호를 묻습니다.
+`./build.sh <target> release` 형식으로 실행하면 스토어 심사 제출용 산출물을 만듭니다.
+스크립트가 현재 `pubspec.yaml`의 `version`을 읽고 새 앱 버전과 빌드번호를 묻습니다.
 
 예:
 
 ```bash
-./build.sh aab release
-./build.sh android release
-./build.sh ios release
+./build.sh aab release      # Google Play Console 업로드용 AAB
+./build.sh android release  # Google Play Console 업로드용 AAB
+./build.sh ios release      # App Store Connect 업로드용 IPA
 ```
 
 규칙:
@@ -128,6 +129,8 @@ flutter build ipa --release --dart-define=SHOW_ADMOB=true
 - 앱 버전은 현재 버전보다 낮을 수 없습니다.
 - 빌드번호는 현재 빌드번호보다 커야 합니다.
 - 정상 입력이면 `quick-board-flutter/apps/skulking/pubspec.yaml`의 `version:`이 갱신됩니다.
+- Android release는 APK가 아니라 AAB만 생성합니다.
+- iOS release는 no-codesign 앱이 아니라 IPA를 생성합니다.
 - 빌드가 성공하면 `pubspec.yaml` 버전 변경만 자동 커밋합니다.
 - 자동 커밋을 끄려면 `AUTO_COMMIT=false ./build.sh aab release`를 사용합니다.
 
