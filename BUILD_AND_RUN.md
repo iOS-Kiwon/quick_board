@@ -131,6 +131,7 @@ flutter build ios --release --no-codesign
 - 정상 입력이면 `quick-board-flutter/apps/skulking/pubspec.yaml`의 `version:`이 갱신됩니다.
 - Android release는 APK가 아니라 AAB만 생성합니다.
 - iOS release는 no-codesign 앱이 아니라 IPA를 생성합니다.
+- release 빌드가 성공하면 생성된 AAB/IPA 폴더를 Finder로 엽니다.
 - 빌드가 성공하면 `pubspec.yaml` 버전 변경만 자동 커밋합니다.
 - 자동 커밋을 끄려면 `AUTO_COMMIT=false ./build.sh aab release`를 사용합니다.
 

@@ -28,6 +28,7 @@ BUILD_KIND="${2:-snapshot}"
 FAIL=0
 VERSION_UPDATED=0
 NEXT_VERSION=""
+RELEASE_OUTPUT_DIRS=()
 
 export PATH="/Users/yee/Programs/flutter/bin:/opt/homebrew/bin:$PATH"
 
@@ -172,6 +173,31 @@ commit_release_version() {
   fi
 }
 
+remember_release_output_dir() {
+  [ "$BUILD_KIND" = "release" ] || return
+  RELEASE_OUTPUT_DIRS+=("$1")
+}
+
+open_release_outputs() {
+  [ "$BUILD_KIND" = "release" ] || return
+  [ "${#RELEASE_OUTPUT_DIRS[@]}" -gt 0 ] || return
+
+  if [ "$(uname)" != "Darwin" ] || ! command -v open >/dev/null 2>&1; then
+    warn "Finder를 열 수 없는 환경입니다. 산출물 위치:"
+    for dir in "${RELEASE_OUTPUT_DIRS[@]}"; do
+      info "$dir"
+    done
+    return
+  fi
+
+  for dir in "${RELEASE_OUTPUT_DIRS[@]}"; do
+    if [ -d "$dir" ]; then
+      info "Finder 열기: $dir"
+      open "$dir"
+    fi
+  done
+}
+
 have_android() {
   [ -n "${ANDROID_HOME:-}" ] || [ -n "${ANDROID_SDK_ROOT:-}" ] || [ -d "$HOME/Library/Android/sdk" ]
 }
@@ -189,7 +215,9 @@ build_aab() {
 
   info "Android AAB 빌드: kind=$BUILD_KIND, SHOW_ADMOB=$SHOW_ADMOB"
   if flutter build appbundle --release "$dart_define"; then
-    info "AAB: $APP_DIR/build/app/outputs/bundle/release/app-release.aab"
+    output_dir="$APP_DIR/build/app/outputs/bundle/release"
+    info "AAB: $output_dir/app-release.aab"
+    remember_release_output_dir "$output_dir"
   else
     err "Android AAB 빌드 실패"
     FAIL=1
@@ -227,7 +255,9 @@ build_ios() {
   if [ "$BUILD_KIND" = "release" ]; then
     info "iOS App Store 심사용 IPA 빌드: SHOW_ADMOB=$SHOW_ADMOB"
     if flutter build ipa --release "$dart_define"; then
-      info "IPA: $APP_DIR/build/ios/ipa"
+      output_dir="$APP_DIR/build/ios/ipa"
+      info "IPA: $output_dir"
+      remember_release_output_dir "$output_dir"
     else
       err "iOS IPA 빌드 실패"
       FAIL=1
@@ -282,6 +312,7 @@ if [ "$FAIL" -eq 0 ]; then
   if [ "$FAIL" -ne 0 ]; then
     exit 1
   fi
+  open_release_outputs
 else
   err "일부 빌드에 실패했습니다."
   exit 1
