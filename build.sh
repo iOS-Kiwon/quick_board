@@ -131,16 +131,36 @@ prompt_release_version() {
       continue
     fi
 
-    printf "출시 빌드번호 입력 (현재 %s보다 큰 정수): " "$current_build"
+    printf "출시 빌드번호 입력 (현재 %s, 1 이상의 정수): " "$current_build"
     IFS= read -r next_build
     if ! valid_build_number "$next_build"; then
       warn "빌드번호는 1 이상의 정수여야 합니다."
       continue
     fi
 
-    if [ "$next_build" -le "$current_build" ]; then
-      warn "입력한 빌드번호($next_build)가 현재 빌드번호($current_build)보다 크지 않습니다."
+    if [ "$next_build" -lt "$current_build" ]; then
+      warn "입력한 빌드번호($next_build)가 현재 빌드번호($current_build)보다 낮습니다."
       continue
+    fi
+
+    if [ "$version_cmp" -eq 0 ] && [ "$next_build" -eq "$current_build" ]; then
+      while true; do
+        printf "입력한 버전이 현재와 동일합니다 (%s+%s). 이 값으로 빌드할까요? [y/N]: " "$next_name" "$next_build"
+        IFS= read -r answer
+        case "$answer" in
+          y|Y|yes|YES|Yes)
+            next_version="$next_name+$next_build"
+            break 2
+            ;;
+          n|N|no|NO|No|"")
+            warn "동일한 버전 입력을 취소했습니다. 다시 입력하세요."
+            continue 2
+            ;;
+          *)
+            warn "y 또는 n으로 입력하세요."
+            ;;
+        esac
+      done
     fi
 
     next_version="$next_name+$next_build"

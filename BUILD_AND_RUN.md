@@ -127,7 +127,8 @@ flutter build ios --release --no-codesign
 규칙:
 
 - 앱 버전은 현재 버전보다 낮을 수 없습니다.
-- 빌드번호는 현재 빌드번호보다 커야 합니다.
+- 빌드번호는 현재 빌드번호보다 낮을 수 없습니다.
+- 앱 버전과 빌드번호가 모두 현재와 같으면, 동일한 값으로 빌드할지 확인합니다.
 - 정상 입력이면 `quick-board-flutter/apps/skulking/pubspec.yaml`의 `version:`이 갱신됩니다.
 - Android release는 APK가 아니라 AAB만 생성합니다.
 - iOS release는 no-codesign 앱이 아니라 IPA를 생성합니다.
