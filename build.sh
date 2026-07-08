@@ -10,25 +10,29 @@
 #   ./build.sh aab                # Android AAB만
 #
 # 출시 빌드:
-#   ./build.sh android release    # 버전 입력 -> pubspec 갱신 -> Play 심사용 AAB 광고 ON 빌드
-#   ./build.sh aab release        # 버전 입력 -> pubspec 갱신 -> Play 심사용 AAB 광고 ON 빌드
-#   ./build.sh ios release        # 버전 입력 -> pubspec 갱신 -> App Store 심사용 IPA 광고 ON 빌드
+#   ./build.sh android release    # Android 버전 입력 -> Play 심사용 AAB 광고 ON 빌드
+#   ./build.sh aab release        # Android 버전 입력 -> Play 심사용 AAB 광고 ON 빌드
+#   ./build.sh ios release        # iOS 버전 입력 -> App Store 심사용 IPA 광고 ON 빌드
 #
 # 환경 변수:
 #   SHOW_ADMOB=true|false         # release 빌드는 기본 true, 그 외 빌드는 기본 false
-#   AUTO_COMMIT=true|false        # release 빌드는 기본 true. pubspec 버전 변경만 커밋
+#   AUTO_COMMIT=true|false        # release 빌드는 기본 true. 플랫폼별 출시 버전 파일만 커밋
 #
 set -uo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="$ROOT_DIR/quick-board-flutter/apps/skulking"
 PUBSPEC="$APP_DIR/pubspec.yaml"
+VERSION_DIR="$APP_DIR/release_versions"
 TARGET="${1:-all}"
 BUILD_KIND="${2:-snapshot}"
 FAIL=0
-VERSION_UPDATED=0
-NEXT_VERSION=""
 RELEASE_OUTPUT_DIRS=()
+RELEASE_VERSION_FILES=()
+ANDROID_BUILD_NAME=""
+ANDROID_BUILD_NUMBER=""
+IOS_BUILD_NAME=""
+IOS_BUILD_NUMBER=""
 
 export PATH="/Users/yee/Programs/flutter/bin:/opt/homebrew/bin:$PATH"
 
@@ -72,6 +76,23 @@ current_version_line() {
   awk '/^version:/ {print $2; exit}' "$PUBSPEC"
 }
 
+platform_version_file() {
+  case "$1" in
+    android) printf "%s/android.txt" "$VERSION_DIR" ;;
+    ios) printf "%s/ios.txt" "$VERSION_DIR" ;;
+    *) err "알 수 없는 플랫폼: $1"; exit 1 ;;
+  esac
+}
+
+current_platform_version_line() {
+  file="$(platform_version_file "$1")"
+  if [ -f "$file" ]; then
+    awk 'NF {print $1; exit}' "$file"
+  else
+    current_version_line
+  fi
+}
+
 version_name() {
   printf "%s" "$1" | cut -d+ -f1
 }
@@ -109,16 +130,18 @@ compare_versions() {
 }
 
 prompt_release_version() {
-  current="$(current_version_line)"
+  platform="$1"
+  file="$(platform_version_file "$platform")"
+  current="$(current_platform_version_line "$platform")"
   current_name="$(version_name "$current")"
   current_build="$(version_build "$current")"
   [ -n "$current_name" ] || { err "현재 version 값을 읽을 수 없습니다"; exit 1; }
   [ -n "$current_build" ] || current_build=0
 
-  info "현재 앱 버전: $current_name+$current_build"
+  info "현재 $platform 앱 버전: $current_name+$current_build"
 
   while true; do
-    printf "출시 앱 버전 입력 (예: 1.0.0, 현재 %s): " "$current_name"
+    printf "%s 출시 앱 버전 입력 (예: 1.0.0, 현재 %s): " "$platform" "$current_name"
     IFS= read -r next_name
     if ! valid_version_name "$next_name"; then
       warn "버전 형식이 올바르지 않습니다. 예: 1.0.0"
@@ -131,7 +154,7 @@ prompt_release_version() {
       continue
     fi
 
-    printf "출시 빌드번호 입력 (현재 %s, 1 이상의 정수): " "$current_build"
+    printf "%s 출시 빌드번호 입력 (현재 %s, 1 이상의 정수): " "$platform" "$current_build"
     IFS= read -r next_build
     if ! valid_build_number "$next_build"; then
       warn "빌드번호는 1 이상의 정수여야 합니다."
@@ -145,7 +168,7 @@ prompt_release_version() {
 
     if [ "$version_cmp" -eq 0 ] && [ "$next_build" -eq "$current_build" ]; then
       while true; do
-        printf "입력한 버전이 현재와 동일합니다 (%s+%s). 이 값으로 빌드할까요? [y/N]: " "$next_name" "$next_build"
+        printf "입력한 %s 버전이 현재와 동일합니다 (%s+%s). 이 값으로 빌드할까요? [y/N]: " "$platform" "$next_name" "$next_build"
         IFS= read -r answer
         case "$answer" in
           y|Y|yes|YES|Yes)
@@ -167,25 +190,45 @@ prompt_release_version() {
     break
   done
 
-  info "pubspec.yaml version 갱신: $current -> $next_version"
-  perl -0pi -e "s/^version:\\s*\\S+/version: $next_version/m" "$PUBSPEC"
-  VERSION_UPDATED=1
-  NEXT_VERSION="$next_version"
+  mkdir -p "$VERSION_DIR"
+  info "$platform release version 갱신: $current -> $next_version"
+  printf "%s\n" "$next_version" > "$file"
+  RELEASE_VERSION_FILES+=("$file")
+
+  case "$platform" in
+    android)
+      ANDROID_BUILD_NAME="$next_name"
+      ANDROID_BUILD_NUMBER="$next_build"
+      ;;
+    ios)
+      IOS_BUILD_NAME="$next_name"
+      IOS_BUILD_NUMBER="$next_build"
+      ;;
+  esac
 }
 
 commit_release_version() {
   [ "$BUILD_KIND" = "release" ] || return
-  [ "$VERSION_UPDATED" -eq 1 ] || return
+  [ "${#RELEASE_VERSION_FILES[@]}" -gt 0 ] || return
   [ "$AUTO_COMMIT" = "true" ] || { info "AUTO_COMMIT=false 이므로 커밋을 건너뜁니다."; return; }
 
-  pubspec_rel="quick-board-flutter/apps/skulking/pubspec.yaml"
-  if git -C "$ROOT_DIR" diff --quiet -- "$pubspec_rel"; then
-    info "커밋할 pubspec version 변경이 없습니다."
-    return
-  fi
+  rel_files=()
+  changed_files=()
+  for file in "${RELEASE_VERSION_FILES[@]}"; do
+    rel="${file#$ROOT_DIR/}"
+    rel_files+=("$rel")
+    if ! git -C "$ROOT_DIR" diff --quiet -- "$rel"; then
+      changed_files+=("$rel")
+    elif ! git -C "$ROOT_DIR" ls-files --error-unmatch "$rel" >/dev/null 2>&1; then
+      changed_files+=("$rel")
+    fi
+  done
 
-  info "출시 버전 변경 커밋: $NEXT_VERSION"
-  if git -C "$ROOT_DIR" commit --only "$pubspec_rel" -m "chore: bump skulking to $NEXT_VERSION"; then
+  [ "${#changed_files[@]}" -gt 0 ] || { info "커밋할 release version 변경이 없습니다."; return; }
+
+  info "플랫폼별 출시 버전 변경 커밋"
+  if git -C "$ROOT_DIR" add "${rel_files[@]}" &&
+     git -C "$ROOT_DIR" commit --only "${rel_files[@]}" -m "chore: bump skulking release versions"; then
     info "버전 커밋 완료"
   else
     err "버전 커밋 실패"
@@ -234,7 +277,12 @@ build_aab() {
   fi
 
   info "Android AAB 빌드: kind=$BUILD_KIND, SHOW_ADMOB=$SHOW_ADMOB"
-  if flutter build appbundle --release "$dart_define"; then
+  build_args=("$dart_define")
+  if [ "$BUILD_KIND" = "release" ]; then
+    build_args+=("--build-name=$ANDROID_BUILD_NAME" "--build-number=$ANDROID_BUILD_NUMBER")
+  fi
+
+  if flutter build appbundle --release "${build_args[@]}"; then
     output_dir="$APP_DIR/build/app/outputs/bundle/release"
     info "AAB: $output_dir/app-release.aab"
     remember_release_output_dir "$output_dir"
@@ -251,7 +299,12 @@ build_apk() {
   fi
 
   info "Android APK 빌드: kind=$BUILD_KIND, SHOW_ADMOB=$SHOW_ADMOB"
-  if flutter build apk --release "$dart_define"; then
+  build_args=("$dart_define")
+  if [ "$BUILD_KIND" = "release" ]; then
+    build_args+=("--build-name=$ANDROID_BUILD_NAME" "--build-number=$ANDROID_BUILD_NUMBER")
+  fi
+
+  if flutter build apk --release "${build_args[@]}"; then
     info "APK: $APP_DIR/build/app/outputs/flutter-apk/app-release.apk"
   else
     err "Android APK 빌드 실패"
@@ -274,7 +327,8 @@ build_ios() {
 
   if [ "$BUILD_KIND" = "release" ]; then
     info "iOS App Store 심사용 IPA 빌드: SHOW_ADMOB=$SHOW_ADMOB"
-    if flutter build ipa --release "$dart_define"; then
+    build_args=("$dart_define" "--build-name=$IOS_BUILD_NAME" "--build-number=$IOS_BUILD_NUMBER")
+    if flutter build ipa --release "${build_args[@]}"; then
       output_dir="$APP_DIR/build/ios/ipa"
       info "IPA: $output_dir"
       remember_release_output_dir "$output_dir"
@@ -295,7 +349,19 @@ build_ios() {
 }
 
 if [ "$BUILD_KIND" = "release" ]; then
-  prompt_release_version
+  case "$TARGET" in
+    all)
+      prompt_release_version android
+      prompt_release_version ios
+      ;;
+    android|aab|apk|appbundle)
+      prompt_release_version android
+      ;;
+    ios)
+      prompt_release_version ios
+      ;;
+    *) err "알 수 없는 대상: $TARGET (all | android | apk | aab | ios)"; exit 1 ;;
+  esac
 fi
 
 run_pub_get

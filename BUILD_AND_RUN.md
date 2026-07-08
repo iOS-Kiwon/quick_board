@@ -6,6 +6,8 @@ Quick Board 저장소 안의 **스컬킹 점수계산** Flutter 앱을 iOS·Andr
 - Android applicationId: `com.quickboard.skulking`
 - iOS Bundle Identifier: `com.quickboard.skulking`
 - Flutter 버전 정보: `quick-board-flutter/apps/skulking/pubspec.yaml`
+- Android 출시 버전: `quick-board-flutter/apps/skulking/release_versions/android.txt`
+- iOS 출시 버전: `quick-board-flutter/apps/skulking/release_versions/ios.txt`
 
 > 스토어 스크린샷을 찍기 쉽도록 기본 빌드에서는 AdMob이 꺼져 있습니다.
 > 광고를 켠 출시 빌드는 `--dart-define=SHOW_ADMOB=true`를 사용하세요.
@@ -114,7 +116,7 @@ flutter build ios --release --no-codesign
 ## 출시 빌드 버전 입력
 
 `./build.sh <target> release` 형식으로 실행하면 스토어 심사 제출용 산출물을 만듭니다.
-스크립트가 현재 `pubspec.yaml`의 `version`을 읽고 새 앱 버전과 빌드번호를 묻습니다.
+스크립트가 플랫폼별 release version 파일을 읽고 새 앱 버전과 빌드번호를 묻습니다.
 
 예:
 
@@ -126,14 +128,16 @@ flutter build ios --release --no-codesign
 
 규칙:
 
-- 앱 버전은 현재 버전보다 낮을 수 없습니다.
-- 빌드번호는 현재 빌드번호보다 낮을 수 없습니다.
-- 앱 버전과 빌드번호가 모두 현재와 같으면, 동일한 값으로 빌드할지 확인합니다.
-- 정상 입력이면 `quick-board-flutter/apps/skulking/pubspec.yaml`의 `version:`이 갱신됩니다.
+- Android와 iOS는 서로 다른 앱 버전/빌드번호를 사용할 수 있습니다.
+- 앱 버전은 해당 플랫폼의 현재 버전보다 낮을 수 없습니다.
+- 빌드번호는 해당 플랫폼의 현재 빌드번호보다 낮을 수 없습니다.
+- 앱 버전과 빌드번호가 모두 해당 플랫폼의 현재 값과 같으면, 동일한 값으로 빌드할지 확인합니다.
+- 정상 입력이면 `release_versions/android.txt` 또는 `release_versions/ios.txt`가 갱신됩니다.
+- 빌드에는 플랫폼별 값을 `--build-name`, `--build-number`로 전달합니다.
 - Android release는 APK가 아니라 AAB만 생성합니다.
 - iOS release는 no-codesign 앱이 아니라 IPA를 생성합니다.
 - release 빌드가 성공하면 생성된 AAB/IPA 폴더를 Finder로 엽니다.
-- 빌드가 성공하면 `pubspec.yaml` 버전 변경만 자동 커밋합니다.
+- 빌드가 성공하면 플랫폼별 release version 파일 변경만 자동 커밋합니다.
 - 자동 커밋을 끄려면 `AUTO_COMMIT=false ./build.sh aab release`를 사용합니다.
 
 ## AdMob 토글
