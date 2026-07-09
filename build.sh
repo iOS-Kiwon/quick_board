@@ -15,7 +15,7 @@
 #   ./build.sh ios release        # iOS 버전 입력 -> App Store 심사용 IPA 광고 ON 빌드
 #
 # 환경 변수:
-#   SHOW_ADMOB=true|false         # release 빌드는 기본 true, 그 외 빌드는 기본 false
+#   SHOW_ADMOB=true|false         # 기본 true. 광고 없는 빌드가 필요하면 false
 #   AUTO_COMMIT=true|false        # release 빌드는 기본 true. 플랫폼별 출시 버전 파일만 커밋
 #
 set -uo pipefail
@@ -33,6 +33,8 @@ ANDROID_BUILD_NAME=""
 ANDROID_BUILD_NUMBER=""
 IOS_BUILD_NAME=""
 IOS_BUILD_NUMBER=""
+ANDROID_KEY_PROPERTIES="$APP_DIR/android/key.properties"
+ANDROID_KEYSTORE="$APP_DIR/android/app/upload-keystore.jks"
 
 export PATH="/Users/yee/Programs/flutter/bin:/opt/homebrew/bin:$PATH"
 
@@ -50,11 +52,7 @@ case "$BUILD_KIND" in
 esac
 
 if [ -z "${SHOW_ADMOB+x}" ]; then
-  if [ "$BUILD_KIND" = "release" ]; then
-    SHOW_ADMOB="true"
-  else
-    SHOW_ADMOB="false"
-  fi
+  SHOW_ADMOB="true"
 fi
 
 if [ -z "${AUTO_COMMIT+x}" ]; then
@@ -265,6 +263,23 @@ have_android() {
   [ -n "${ANDROID_HOME:-}" ] || [ -n "${ANDROID_SDK_ROOT:-}" ] || [ -d "$HOME/Library/Android/sdk" ]
 }
 
+require_android_release_signing() {
+  [ "$BUILD_KIND" = "release" ] || return
+  case "$TARGET" in
+    all|android|aab|apk|appbundle) ;;
+    *) return ;;
+  esac
+
+  [ -f "$ANDROID_KEY_PROPERTIES" ] || {
+    err "Android release 서명 설정이 없습니다: $ANDROID_KEY_PROPERTIES"
+    exit 1
+  }
+  [ -f "$ANDROID_KEYSTORE" ] || {
+    err "Android release 업로드 키가 없습니다: $ANDROID_KEYSTORE"
+    exit 1
+  }
+}
+
 run_pub_get() {
   info "flutter pub get"
   flutter pub get || { err "pub get 실패"; exit 1; }
@@ -347,6 +362,8 @@ build_ios() {
     fi
   fi
 }
+
+require_android_release_signing
 
 if [ "$BUILD_KIND" = "release" ]; then
   case "$TARGET" in

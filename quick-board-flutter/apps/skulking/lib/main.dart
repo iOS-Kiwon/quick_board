@@ -10,10 +10,15 @@ import 'utils/saved_lang.dart';
 import 'utils/tracking.dart';
 import 'widgets/mobile_ad_banner.dart';
 
+const bool showAdMob = bool.fromEnvironment(
+  'SHOW_ADMOB',
+  defaultValue: true,
+);
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (!kIsWeb) {
+  if (!kIsWeb && showAdMob) {
     MobileAds.instance.initialize();
     AdBannerWidget.mobileAdBuilder = () => const MobileAdBanner();
   }
@@ -22,7 +27,9 @@ void main() {
 
   // ATT 다이얼로그는 앱이 frontmost 상태가 된 뒤에만 표시되므로 첫 프레임 이후에 요청한다.
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    requestTrackingPermission();
+    if (showAdMob) {
+      requestTrackingPermission();
+    }
   });
 }
 

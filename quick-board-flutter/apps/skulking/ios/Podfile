@@ -30,6 +30,9 @@ flutter_ios_podfile_setup
 target 'Skulking' do
   use_frameworks!
 
+  pod 'webview_flutter_wkwebview', :path => '.symlinks/plugins/webview_flutter_wkwebview/darwin'
+  pod 'FirebaseAnalytics'
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'SkulkingTests' do
     inherit! :search_paths

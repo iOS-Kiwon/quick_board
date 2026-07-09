@@ -9,8 +9,8 @@ Quick Board 저장소 안의 **스컬킹 점수계산** Flutter 앱을 iOS·Andr
 - Android 출시 버전: `quick-board-flutter/apps/skulking/release_versions/android.txt`
 - iOS 출시 버전: `quick-board-flutter/apps/skulking/release_versions/ios.txt`
 
-> 스토어 스크린샷을 찍기 쉽도록 기본 빌드에서는 AdMob이 꺼져 있습니다.
-> 광고를 켠 출시 빌드는 `--dart-define=SHOW_ADMOB=true`를 사용하세요.
+> 기본 빌드와 실행에서 AdMob이 켜집니다.
+> 광고 없이 실행하거나 빌드하려면 `SHOW_ADMOB=false`를 사용하세요.
 
 ## 빠른 스크립트
 
@@ -32,7 +32,7 @@ Quick Board 저장소 안의 **스컬킹 점수계산** Flutter 앱을 iOS·Andr
 ./run.sh ios                # 첫 iOS 기기/시뮬레이터에서 실행
 ./run.sh R5CX937DAHV        # 특정 기기 ID로 실행
 MODE=debug ./run.sh android # debug/profile/release 선택
-SHOW_ADMOB=true ./run.sh android     # 광고 ON으로 실행
+SHOW_ADMOB=true ./run.sh android    # 광고 OFF로 실행
 ```
 
 ## 사전 준비
@@ -71,12 +71,12 @@ flutter install -d R5CX937DAHV
 ```bash
 cd quick-board-flutter/apps/skulking
 
-# 스크린샷/테스트용: 광고 OFF
+# 기본 빌드: 광고 ON
 flutter build apk --release
 flutter build appbundle --release
 
-# 출시/심사용: 광고 ON
-flutter build appbundle --release --dart-define=SHOW_ADMOB=true
+# 광고 OFF 빌드
+flutter build appbundle --release --dart-define=SHOW_ADMOB=false
 ```
 
 산출물:
@@ -144,10 +144,10 @@ flutter build ios --release --no-codesign
 
 [main.dart](quick-board-flutter/apps/skulking/lib/main.dart)에서 `SHOW_ADMOB` dart-define을 읽습니다.
 
-- 기본값: 광고 OFF
-- 출시용 광고 ON: `--dart-define=SHOW_ADMOB=true`
+- 기본값: 광고 ON
+- 광고 OFF: `--dart-define=SHOW_ADMOB=false`
 
-스크린샷용 빌드에서는 아무 옵션도 주지 않으면 광고가 나오지 않습니다.
+스크린샷용으로 광고를 숨기려면 `SHOW_ADMOB=false`를 지정합니다.
 
 ## Firebase
 

@@ -11,7 +11,7 @@
 #
 # 환경 변수:
 #   MODE=release|debug|profile  # 기본 release
-#   SHOW_ADMOB=true             # 기본 false. 출시/광고 확인용일 때만 true
+#   SHOW_ADMOB=true|false       # 기본 true. 광고 없이 실행할 때 false
 #
 set -uo pipefail
 
@@ -19,7 +19,7 @@ ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="$ROOT_DIR/quick-board-flutter/apps/skulking"
 MODE="${MODE:-release}"
 TARGET="${1:-auto}"
-SHOW_ADMOB="${SHOW_ADMOB:-false}"
+SHOW_ADMOB="${SHOW_ADMOB:-true}"
 
 export PATH="/Users/yee/Programs/flutter/bin:/opt/homebrew/bin:$PATH"
 

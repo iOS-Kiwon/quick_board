@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "669441276166",
+    "project_id": "quickboard-skulking",
+    "storage_bucket": "quickboard-skulking.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669441276166:android:778ea22d4bd452f7594687",
+        "android_client_info": {
+          "package_name": "com.quickboard.skulking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWvL6nBJh02yodr0kfnquA98QYnYVtNY4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
