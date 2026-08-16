@@ -28,8 +28,8 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     final l = AppLocalizations.of(context)!;
 
     return Scaffold(
-      bottomNavigationBar: const AdBannerWidget(),
       body: SafeArea(
+        bottom: false,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [

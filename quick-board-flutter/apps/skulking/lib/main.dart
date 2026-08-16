@@ -45,11 +45,22 @@ class SkulkingApp extends StatelessWidget {
       theme: AppTheme.dark,
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
       locale: savedLang != null ? Locale(savedLang) : null,
-      builder: (context, child) => GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: child,
-      ),
+      // Keep one AdMob banner above the app's Navigator. Route changes replace
+      // only `child`, so the banner State (and its loaded BannerAd) survives
+      // setup → game → result navigation.
+      builder: (context, child) {
+        final content = GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: child ?? const SizedBox.shrink(),
+        );
+        return Column(
+          children: [
+            Expanded(child: content),
+            const AdBannerWidget(),
+          ],
+        );
+      },
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
