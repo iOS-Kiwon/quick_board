@@ -3,6 +3,7 @@
 # Quick Board — 스컬킹 Flutter 앱 빌드 스크립트
 #
 # 사용법:
+#   ./build.sh --help          # 도움말
 #   ./build.sh                    # Android + iOS 스크린샷/테스트 빌드
 #   ./build.sh android            # Android AAB/APK
 #   ./build.sh ios                # iOS no-codesign
@@ -20,7 +21,7 @@
 #
 set -uo pipefail
 
-ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APP_DIR="$ROOT_DIR/quick-board-flutter/apps/skulking"
 PUBSPEC="$APP_DIR/pubspec.yaml"
 VERSION_DIR="$APP_DIR/release_versions"
@@ -33,6 +34,8 @@ ANDROID_BUILD_NAME=""
 ANDROID_BUILD_NUMBER=""
 IOS_BUILD_NAME=""
 IOS_BUILD_NUMBER=""
+ANDROID_PENDING_VERSION=""
+IOS_PENDING_VERSION=""
 ANDROID_KEY_PROPERTIES="$APP_DIR/android/key.properties"
 ANDROID_KEYSTORE="$APP_DIR/android/app/upload-keystore.jks"
 
@@ -41,6 +44,15 @@ export PATH="/Users/yee/Programs/flutter/bin:/opt/homebrew/bin:$PATH"
 info() { printf "\033[1;34m[build]\033[0m %s\n" "$*"; }
 warn() { printf "\033[1;33m[build] ! %s\033[0m\n" "$*"; }
 err()  { printf "\033[1;31m[build] x %s\033[0m\n" "$*"; }
+
+usage() {
+  sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  exit 0
+fi
 
 command -v flutter >/dev/null 2>&1 || { err "flutter 명령을 찾을 수 없습니다"; exit 1; }
 [ -d "$APP_DIR" ] || { err "앱 경로를 찾을 수 없습니다: $APP_DIR"; exit 1; }
@@ -188,9 +200,11 @@ prompt_release_version() {
     break
   done
 
-  mkdir -p "$VERSION_DIR"
-  info "$platform release version 갱신: $current -> $next_version"
-  printf "%s\n" "$next_version" > "$file"
+  case "$platform" in
+    android) ANDROID_PENDING_VERSION="$next_version" ;;
+    ios) IOS_PENDING_VERSION="$next_version" ;;
+  esac
+  info "$platform release version 예약: $current -> $next_version (빌드 성공 후 저장)"
   RELEASE_VERSION_FILES+=("$file")
 
   case "$platform" in
@@ -203,6 +217,29 @@ prompt_release_version() {
       IOS_BUILD_NUMBER="$next_build"
       ;;
   esac
+}
+
+persist_release_version() {
+  platform="$1"
+  file="$(platform_version_file "$platform")"
+  case "$platform" in
+    android) version="$ANDROID_PENDING_VERSION" ;;
+    ios) version="$IOS_PENDING_VERSION" ;;
+    *) return 0 ;;
+  esac
+  [ -n "$version" ] || return 0
+
+  mkdir -p "$VERSION_DIR"
+  temp_file="$(mktemp "${file}.tmp.XXXXXX")" || {
+    err "release version 임시 파일을 만들 수 없습니다: $file"
+    return 1
+  }
+  if ! printf "%s\n" "$version" > "$temp_file" || ! mv "$temp_file" "$file"; then
+    rm -f "$temp_file"
+    err "release version 저장 실패: $file"
+    return 1
+  fi
+  info "$file 저장 완료: $version"
 }
 
 commit_release_version() {
@@ -301,6 +338,9 @@ build_aab() {
     output_dir="$APP_DIR/build/app/outputs/bundle/release"
     info "AAB: $output_dir/app-release.aab"
     remember_release_output_dir "$output_dir"
+    if [ "$BUILD_KIND" = "release" ]; then
+      persist_release_version android || FAIL=1
+    fi
   else
     err "Android AAB 빌드 실패"
     FAIL=1
@@ -321,6 +361,9 @@ build_apk() {
 
   if flutter build apk --release "${build_args[@]}"; then
     info "APK: $APP_DIR/build/app/outputs/flutter-apk/app-release.apk"
+    if [ "$BUILD_KIND" = "release" ]; then
+      persist_release_version android || FAIL=1
+    fi
   else
     err "Android APK 빌드 실패"
     FAIL=1
@@ -347,6 +390,7 @@ build_ios() {
       output_dir="$APP_DIR/build/ios/ipa"
       info "IPA: $output_dir"
       remember_release_output_dir "$output_dir"
+      persist_release_version ios || FAIL=1
     else
       err "iOS IPA 빌드 실패"
       FAIL=1
