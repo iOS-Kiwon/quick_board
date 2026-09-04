@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_board_core/quick_board_core.dart';
 import '../l10n/app_localizations.dart';
 import '../models/yacht_category.dart';
 import '../models/yacht_state.dart';
@@ -27,7 +26,6 @@ class ScoreScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: YachtColors.background,
-      bottomNavigationBar: const AdBannerWidget(),
       appBar: AppBar(
         title: Text(l.appName),
         backgroundColor: YachtColors.background,

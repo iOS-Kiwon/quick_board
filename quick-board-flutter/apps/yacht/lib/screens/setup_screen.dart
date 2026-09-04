@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_board_core/quick_board_core.dart';
 import '../l10n/app_localizations.dart';
 import '../notifiers/yacht_notifier.dart';
 import '../theme/yacht_colors.dart';
@@ -57,18 +56,9 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
 
     return Scaffold(
       backgroundColor: YachtColors.background,
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
-              child: YachtButton(label: l.startGame, onPressed: _startGame),
-            ),
-            const AdBannerWidget(),
-          ],
-        ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+        child: YachtButton(label: l.startGame, onPressed: _startGame),
       ),
       body: SafeArea(
         bottom: false,
