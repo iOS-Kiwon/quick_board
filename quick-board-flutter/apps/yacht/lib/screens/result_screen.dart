@@ -45,7 +45,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       ),
       body: SafeArea(
         top: false,
-        bottom: false,
         child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

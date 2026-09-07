@@ -31,23 +31,26 @@ class ScoreScreen extends ConsumerWidget {
         backgroundColor: YachtColors.background,
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ScoreSheetTable(
-              state: state,
-              onCategoryTap: (playerIndex, category) =>
-                  _openScoreInput(context, ref, state, playerIndex, category, l),
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            Expanded(
+              child: ScoreSheetTable(
+                state: state,
+                onCategoryTap: (playerIndex, category) => _openScoreInput(
+                    context, ref, state, playerIndex, category, l),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: YachtButton(
-              label: l.endGame,
-              onPressed: () => context.go('/result'),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: YachtButton(
+                label: l.endGame,
+                onPressed: () => context.go('/result'),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

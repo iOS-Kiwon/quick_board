@@ -56,9 +56,12 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
 
     return Scaffold(
       backgroundColor: YachtColors.background,
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
-        child: YachtButton(label: l.startGame, onPressed: _startGame),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
+          child: YachtButton(label: l.startGame, onPressed: _startGame),
+        ),
       ),
       body: SafeArea(
         bottom: false,

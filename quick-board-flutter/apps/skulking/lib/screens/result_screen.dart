@@ -29,7 +29,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
 
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
