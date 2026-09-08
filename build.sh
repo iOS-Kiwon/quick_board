@@ -1,28 +1,121 @@
 #!/usr/bin/env bash
 #
-# Quick Board — 스컬킹 Flutter 앱 빌드 스크립트
-#
-# 사용법:
-#   ./build.sh --help          # 도움말
-#   ./build.sh                    # Android + iOS 스크린샷/테스트 빌드
-#   ./build.sh android            # Android AAB/APK
-#   ./build.sh ios                # iOS no-codesign
-#   ./build.sh apk                # Android APK만
-#   ./build.sh aab                # Android AAB만
-#
-# 출시 빌드:
-#   ./build.sh android release    # Android 버전 입력 -> Play 심사용 AAB 광고 ON 빌드
-#   ./build.sh aab release        # Android 버전 입력 -> Play 심사용 AAB 광고 ON 빌드
-#   ./build.sh ios release        # iOS 버전 입력 -> App Store 심사용 IPA 광고 ON 빌드
-#
-# 환경 변수:
-#   SHOW_ADMOB=true|false         # 기본 true. 광고 없는 빌드가 필요하면 false
-#   AUTO_COMMIT=true|false        # release 빌드는 기본 true. 플랫폼별 출시 버전 파일만 커밋
+# Quick Board — Flutter 앱 빌드 스크립트
 #
 set -uo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-APP_DIR="$ROOT_DIR/quick-board-flutter/apps/skulking"
+APPS_DIR="$ROOT_DIR/quick-board-flutter/apps"
+
+export PATH="/Users/yee/Programs/flutter/bin:/opt/homebrew/bin:$PATH"
+
+info() { printf "\033[1;34m[build]\033[0m %s\n" "$*"; }
+warn() { printf "\033[1;33m[build] ! %s\033[0m\n" "$*"; }
+err()  { printf "\033[1;31m[build] x %s\033[0m\n" "$*"; }
+
+usage() {
+  cat <<'EOF'
+Quick Board — Flutter 앱 빌드 스크립트
+
+사용법:
+  ./build.sh --help                도움말
+  ./build.sh                       앱을 고른 뒤 Android + iOS 스크린샷/테스트 빌드
+  ./build.sh <대상> [종류]         앱을 물어본 뒤 빌드
+  ./build.sh <앱> <대상> [종류]    앱까지 인자로 지정 (프롬프트 생략)
+
+앱:
+  skulking | yacht                 생략하면 실행할 때 물어봅니다
+
+대상:
+  all (기본) | android | aab | apk | ios
+
+종류:
+  snapshot (기본) | release
+
+예:
+  ./build.sh                       앱을 고른 뒤 스냅샷 빌드
+  ./build.sh ios release           앱을 고른 뒤 App Store 심사용 IPA
+  ./build.sh yacht ios release     요트다이스 App Store 심사용 IPA
+  APP=yacht ./build.sh ios release 위와 같음
+
+환경 변수:
+  APP=skulking|yacht               앱 선택. 지정하면 묻지 않습니다
+  SHOW_ADMOB=true|false            기본 true. 광고 없는 빌드가 필요하면 false
+  AUTO_COMMIT=true|false           release 빌드는 기본 true. 플랫폼별 출시 버전 파일만 커밋
+EOF
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  exit 0
+fi
+
+command -v flutter >/dev/null 2>&1 || { err "flutter 명령을 찾을 수 없습니다"; exit 1; }
+
+# ---------------------------------------------------------------------------
+# 어떤 앱을 빌드할지 가장 먼저 정한다.
+# 순서: APP 환경변수 -> 첫 인자 -> 대화형 선택
+# ---------------------------------------------------------------------------
+
+app_exists() { [ -f "$APPS_DIR/$1/pubspec.yaml" ]; }
+
+app_label() {
+  case "$1" in
+    skulking) printf "스컬킹" ;;
+    yacht)    printf "요트다이스" ;;
+    *)        printf "%s" "$1" ;;
+  esac
+}
+
+list_apps() {
+  for dir in "$APPS_DIR"/*/; do
+    name="$(basename "$dir")"
+    app_exists "$name" && printf "%s\n" "$name"
+  done
+}
+
+prompt_app() {
+  local apps=() choice i
+  while IFS= read -r name; do apps+=("$name"); done < <(list_apps)
+  [ "${#apps[@]}" -gt 0 ] || { err "빌드할 앱을 찾을 수 없습니다: $APPS_DIR"; exit 1; }
+
+  if [ "${#apps[@]}" -eq 1 ]; then
+    APP="${apps[0]}"
+    return
+  fi
+
+  info "어떤 앱을 빌드할까요?"
+  for i in "${!apps[@]}"; do
+    printf "  %d) %s (%s)\n" "$((i + 1))" "$(app_label "${apps[$i]}")" "${apps[$i]}"
+  done
+
+  while true; do
+    printf "앱 선택 [1-%d]: " "${#apps[@]}"
+    IFS= read -r choice
+    if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#apps[@]}" ]; then
+      APP="${apps[$((choice - 1))]}"
+      return
+    fi
+    warn "1부터 ${#apps[@]} 사이의 숫자를 입력하세요."
+  done
+}
+
+APP="${APP:-}"
+if [ -n "$APP" ]; then
+  app_exists "$APP" || { err "알 수 없는 앱: $APP (가능: $(list_apps | tr '\n' ' '))"; exit 1; }
+elif [ -n "${1:-}" ] && app_exists "$1"; then
+  APP="$1"
+  shift
+elif [ -t 0 ]; then
+  prompt_app
+else
+  err "앱을 지정하세요. 예: APP=yacht ./build.sh ios release"
+  exit 1
+fi
+
+info "대상 앱: $(app_label "$APP") ($APP)"
+
+APP_DIR="$APPS_DIR/$APP"
 PUBSPEC="$APP_DIR/pubspec.yaml"
 VERSION_DIR="$APP_DIR/release_versions"
 TARGET="${1:-all}"
@@ -39,22 +132,6 @@ IOS_PENDING_VERSION=""
 ANDROID_KEY_PROPERTIES="$APP_DIR/android/key.properties"
 ANDROID_KEYSTORE="$APP_DIR/android/app/upload-keystore.jks"
 
-export PATH="/Users/yee/Programs/flutter/bin:/opt/homebrew/bin:$PATH"
-
-info() { printf "\033[1;34m[build]\033[0m %s\n" "$*"; }
-warn() { printf "\033[1;33m[build] ! %s\033[0m\n" "$*"; }
-err()  { printf "\033[1;31m[build] x %s\033[0m\n" "$*"; }
-
-usage() {
-  sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'
-}
-
-if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-  usage
-  exit 0
-fi
-
-command -v flutter >/dev/null 2>&1 || { err "flutter 명령을 찾을 수 없습니다"; exit 1; }
 [ -d "$APP_DIR" ] || { err "앱 경로를 찾을 수 없습니다: $APP_DIR"; exit 1; }
 [ -f "$PUBSPEC" ] || { err "pubspec.yaml을 찾을 수 없습니다: $PUBSPEC"; exit 1; }
 
@@ -263,7 +340,7 @@ commit_release_version() {
 
   info "플랫폼별 출시 버전 변경 커밋"
   if git -C "$ROOT_DIR" add "${rel_files[@]}" &&
-     git -C "$ROOT_DIR" commit --only "${rel_files[@]}" -m "chore: bump skulking release versions"; then
+     git -C "$ROOT_DIR" commit --only "${rel_files[@]}" -m "chore: bump $APP release versions"; then
     info "버전 커밋 완료"
   else
     err "버전 커밋 실패"
@@ -297,7 +374,39 @@ open_release_outputs() {
 }
 
 have_android() {
+  # 앱에 android 폴더가 없으면(iOS 전용 앱) Android 빌드 자체가 불가능하다.
+  [ -d "$APP_DIR/android" ] || return 1
   [ -n "${ANDROID_HOME:-}" ] || [ -n "${ANDROID_SDK_ROOT:-}" ] || [ -d "$HOME/Library/Android/sdk" ]
+}
+
+# 명시적으로 고른 대상을 이 앱이 지원하는지 먼저 확인한다.
+# all 은 지원하는 플랫폼만 골라 빌드하므로 검사하지 않는다.
+require_platform_support() {
+  case "$TARGET" in
+    android|aab|apk|appbundle)
+      [ -d "$APP_DIR/android" ] || {
+        err "$(app_label "$APP")에는 android 폴더가 없습니다. iOS 전용 앱입니다."
+        exit 1
+      }
+      ;;
+    ios)
+      [ -d "$APP_DIR/ios" ] || {
+        err "$(app_label "$APP")에는 ios 폴더가 없습니다."
+        exit 1
+      }
+      ;;
+  esac
+}
+
+# 빌드된 .app 이름은 Xcode 프로젝트 이름을 따른다 (Skulking.xcodeproj -> Skulking.app)
+ios_app_name() {
+  local proj
+  for proj in "$APP_DIR"/ios/*.xcodeproj; do
+    [ -d "$proj" ] || continue
+    basename "$proj" .xcodeproj
+    return
+  done
+  printf "Runner"
 }
 
 require_android_release_signing() {
@@ -306,6 +415,8 @@ require_android_release_signing() {
     all|android|aab|apk|appbundle) ;;
     *) return ;;
   esac
+  # iOS 전용 앱은 Android 서명 설정이 필요 없다.
+  [ -d "$APP_DIR/android" ] || return
 
   [ -f "$ANDROID_KEY_PROPERTIES" ] || {
     err "Android release 서명 설정이 없습니다: $ANDROID_KEY_PROPERTIES"
@@ -398,8 +509,8 @@ build_ios() {
   else
     info "iOS no-codesign 빌드: kind=$BUILD_KIND, SHOW_ADMOB=$SHOW_ADMOB"
     if flutter build ios --release --no-codesign "$dart_define"; then
-      info "iOS app: $APP_DIR/build/ios/iphoneos/Skulking.app"
-      info "심사용 IPA: ./build.sh ios release"
+      info "iOS app: $APP_DIR/build/ios/iphoneos/$(ios_app_name).app"
+      info "심사용 IPA: ./build.sh $APP ios release"
     else
       err "iOS 빌드 실패"
       FAIL=1
@@ -407,13 +518,15 @@ build_ios() {
   fi
 }
 
+require_platform_support
 require_android_release_signing
 
 if [ "$BUILD_KIND" = "release" ]; then
   case "$TARGET" in
     all)
-      prompt_release_version android
-      prompt_release_version ios
+      # 앱이 지원하는 플랫폼의 버전만 묻는다.
+      [ -d "$APP_DIR/android" ] && prompt_release_version android
+      [ -d "$APP_DIR/ios" ] && prompt_release_version ios
       ;;
     android|aab|apk|appbundle)
       prompt_release_version android
