@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.0.3+8
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.10.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -15,11 +15,11 @@ dependencies:
   flutter_riverpod: ^2.5.1
   go_router: ^13.2.0
   google_fonts: ^6.2.1
-  share_plus: ^9.0.0
+  share_plus: ^13.3.0
   path_provider: ^2.1.4
   screenshot: ^3.0.0
-  google_mobile_ads: ^5.1.0
-  app_tracking_transparency: ^2.0.6
+  google_mobile_ads: ^9.1.0
+  app_tracking_transparency: ^2.0.7
   quick_board_core:
     path: ../../packages/quick_board_core
 

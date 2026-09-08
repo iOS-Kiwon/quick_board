@@ -131,10 +131,12 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
           ? box.localToGlobal(Offset.zero) & box.size
           : null;
 
-      final result = await Share.shareXFiles(
-        [XFile(file.path, mimeType: 'image/png')],
-        subject: l.appName,
-        sharePositionOrigin: origin,
+      final result = await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path, mimeType: 'image/png')],
+          subject: l.appName,
+          sharePositionOrigin: origin,
+        ),
       );
       debugPrint('[Share] status: ${result.status}');
     } catch (e, st) {

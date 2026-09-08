@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.0.1+3
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.10.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -15,11 +15,11 @@ dependencies:
   flutter_riverpod: ^2.5.1
   go_router: ^13.2.0
   google_fonts: ^6.2.1
-  share_plus: ^9.0.0
+  share_plus: ^13.3.0
   path_provider: ^2.1.4
   screenshot: ^3.0.0
-  google_mobile_ads: ^5.1.0
-  app_tracking_transparency: ^2.0.6
+  google_mobile_ads: ^9.1.0
+  app_tracking_transparency: ^2.0.7
   quick_board_core:
     path: ../../packages/quick_board_core
 
@@ -31,15 +31,6 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
-
-  # Swift Package Manager를 끈다.
-  # 이 프로젝트의 Xcode 설정은 SPM 통합이 안 된 상태로 커밋돼 있어서,
-  # 빌드할 때마다 Flutter가 즉석에서 SPM으로 옮기려 한다. 그러면
-  # webview_flutter_wkwebview만 SPM으로 넘어가는데, CocoaPods를 쓰는
-  # google_mobile_ads가 이걸 pod 의존성으로 찾다가 실패한다.
-  # 모두 CocoaPods로 통일해서 ios/Podfile.lock과 맞춘다.
-  config:
-    enable-swift-package-manager: false
 
   fonts:
     - family: NotoSansKR
