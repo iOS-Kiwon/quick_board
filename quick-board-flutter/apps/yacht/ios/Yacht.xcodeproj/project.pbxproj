@@ -16,6 +16,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		AB12CD34EF560123456789AB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC23DE45FA670123456789AC /* InfoPlist.strings */; };
+		AEDA9A48C880A5FFCDB1D2BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 246C31A07DF90D644D0ABF8A /* GoogleService-Info.plist */; };
 		CF56DEBA21B77CB6F7C80CDF /* Pods_Yacht.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC7624135AB554D729BFE0BA /* Pods_Yacht.framework */; };
 		D94A6597C9908492C4EFA2EA /* Pods_YachtTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03CE9F6FE4F9F3F67A50D201 /* Pods_YachtTests.framework */; };
 /* End PBXBuildFile section */
@@ -48,6 +49,7 @@
 		0A9FA0F5242F8602DBFBB736 /* Pods-YachtTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YachtTests.release.xcconfig"; path = "Target Support Files/Pods-YachtTests/Pods-YachtTests.release.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		246C31A07DF90D644D0ABF8A /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* YachtTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YachtTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* YachtTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YachtTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				BC23DE45FA670123456789AC /* InfoPlist.strings */,
+				246C31A07DF90D644D0ABF8A /* GoogleService-Info.plist */,
 			);
 			name = Yacht;
 			path = Runner;
@@ -276,6 +279,7 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				AB12CD34EF560123456789AB /* InfoPlist.strings in Resources */,
+				AEDA9A48C880A5FFCDB1D2BC /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
