@@ -20,7 +20,12 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (!kIsWeb && showAdMob) {
-    MobileAds.instance.initialize();
+    MobileAds.instance.initialize().then((status) {
+      final adapters = status.adapterStatuses.entries
+          .map((e) => '${e.key}=${e.value.state.name}(${e.value.description})')
+          .join(' | ');
+      debugPrint('[AdMob] SDK 초기화 완료: $adapters');
+    });
     AdBannerWidget.mobileAdBuilder = () => const MobileAdBanner();
   }
 
