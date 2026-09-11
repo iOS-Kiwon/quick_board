@@ -487,12 +487,8 @@ build_ios() {
     return
   fi
 
-  if command -v pod >/dev/null 2>&1; then
-    info "pod install"
-    pod install --project-directory=ios || { err "pod install 실패"; FAIL=1; return; }
-  else
-    warn "CocoaPods가 없어 iOS 빌드가 실패할 수 있습니다."
-  fi
+  # CocoaPods를 걷어내고 Swift Package Manager로 옮겼으므로 pod install을 하지 않는다.
+  # Podfile이 있는 프로젝트라면 flutter가 빌드 과정에서 알아서 pod install을 돌린다.
 
   if [ "$BUILD_KIND" = "release" ]; then
     info "iOS App Store 심사용 IPA 빌드: SHOW_ADMOB=$SHOW_ADMOB"

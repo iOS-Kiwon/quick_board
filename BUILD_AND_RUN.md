@@ -91,11 +91,8 @@ macOS에서 Flutter 명령이 안 잡히면 아래 경로 중 설치된 쪽을 P
 export PATH="/opt/homebrew/bin:$PATH"
 ```
 
-iOS 빌드에는 CocoaPods가 필요합니다.
-
-```bash
-brew install cocoapods
-```
+iOS 의존성은 Swift Package Manager로 관리합니다. CocoaPods는 쓰지 않으므로
+`pod install`이 필요 없습니다. 패키지는 첫 빌드 때 Xcode가 내려받습니다.
 
 ## Android (스컬킹 전용)
 
@@ -147,7 +144,7 @@ flutter run --release -d "<device-id>"    # 실기기
 실기기 실행과 IPA 빌드에는 Xcode 서명 설정이 필요합니다.
 Xcode → Settings → Accounts에 팀 `W6B6ZQQ57S` 권한이 있는 Apple ID를 추가한 뒤,
 `Runner` 타깃의 Signing & Capabilities에서 Team과 프로비저닝 프로파일을 확인하세요.
-CocoaPods를 쓰므로 `.xcodeproj`가 아니라 `.xcworkspace`를 열어야 합니다.
+Flutter가 빌드에 `.xcworkspace`를 쓰므로 Xcode에서도 이쪽을 여세요.
 
 ```bash
 open quick-board-flutter/apps/yacht/ios/Yacht.xcworkspace
@@ -157,7 +154,6 @@ open quick-board-flutter/apps/yacht/ios/Yacht.xcworkspace
 
 ```bash
 cd quick-board-flutter/apps/<앱>
-pod install --project-directory=ios
 flutter build ios --release --no-codesign
 ```
 
@@ -167,19 +163,38 @@ flutter build ios --release --no-codesign
 ./build.sh yacht ios release
 ```
 
-### 요트다이스의 Swift Package Manager 설정
+### 의존성 관리 (Swift Package Manager)
 
-`quick-board-flutter/apps/yacht/pubspec.yaml`에 SPM을 끄는 설정이 있습니다.
+두 앱 모두 CocoaPods를 걷어내고 SPM으로 옮겼습니다. `Podfile`, `Podfile.lock`, `Pods/`가
+없고 `pod install`도 하지 않습니다. 패키지 버전은 아래 두 파일로 고정합니다.
 
-```yaml
-flutter:
-  config:
-    enable-swift-package-manager: false
+- `ios/<앱>.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
+- `ios/<앱>.xcworkspace/xcshareddata/swiftpm/Package.resolved`
+
+### Xcode에서 직접 빌드할 때
+
+Xcode에서 고를 대상과 **다른 대상으로** flutter 명령을 먼저 돌리면 Xcode 빌드가 깨집니다.
+`flutter run`을 iOS 17 이상 실기기에 debug로 돌리면 Flutter가
+`ios/Flutter/Generated.xcconfig`에 그 대상의 산출물 경로를 `CONFIGURATION_BUILD_DIR`로
+박아두기 때문입니다. 이 값은 빌드 구성과 무관하게 경로를 강제합니다.
+
+그 상태로 Xcode에서 시뮬레이터를 빌드하면 실기기용 `Flutter.framework`를 찾다가
+`import Flutter`를 하는 플러그인들이 줄줄이 실패합니다.
+
+```
+Unable to resolve module dependency: 'Flutter'
+'Flutter/Flutter.h' file not found
 ```
 
-이 설정이 없으면 빌드할 때마다 Flutter가 Xcode 프로젝트를 SPM으로 옮기려 하고,
-그 과정에서 `webview_flutter_wkwebview`만 SPM으로 넘어갑니다. 그러면 CocoaPods를 쓰는
-`google_mobile_ads`가 이걸 pod 의존성으로 찾다가 실패합니다. 지우지 마세요.
+Xcode로 빌드하기 전에 같은 대상으로 flutter 명령을 한 번 돌리면 됩니다.
+저장소 루트가 아니라 **앱 폴더에서** 실행해야 합니다.
+
+```bash
+cd quick-board-flutter/apps/<앱>          # skulking 또는 yacht
+
+flutter build ios --debug --simulator     # Xcode에서 시뮬레이터를 빌드할 때
+flutter build ios --debug --no-codesign   # Xcode에서 실기기를 빌드할 때
+```
 
 ## 출시 빌드 버전 입력
 
@@ -223,15 +238,18 @@ flutter:
 배치됩니다. 화면을 이동해도 배너가 다시 로드되지 않고, 위치는 화면 상단(세이프 영역 바로
 아래)입니다. 모든 화면이 값을 입력하는 화면이라 하단에 두면 키패드에 가려집니다.
 
-## Firebase (스컬킹 전용)
+## Firebase
 
 Firebase 설정 파일 위치:
 
-- Android: `quick-board-flutter/apps/skulking/android/app/google-services.json`
-- iOS: `quick-board-flutter/apps/skulking/ios/Runner/GoogleService-Info.plist`
+- 스컬킹 Android: `quick-board-flutter/apps/skulking/android/app/google-services.json`
+- 스컬킹 iOS: `quick-board-flutter/apps/skulking/ios/Runner/GoogleService-Info.plist`
+- 요트다이스 iOS: `quick-board-flutter/apps/yacht/ios/Runner/GoogleService-Info.plist`
 
 Android는 Google Services Gradle 플러그인을 사용합니다.
-iOS는 현재 Flutter/CocoaPods 플러그인 구성에 맞춰 `FirebaseAnalytics`를 CocoaPods로 설치합니다.
+iOS는 Dart 패키지 없이 네이티브만 씁니다. Xcode 프로젝트에 firebase-ios-sdk를
+Swift Package로 붙이고 `FirebaseAnalytics` 제품을 앱 타깃에 링크한 뒤,
+`AppDelegate.swift`에서 `FirebaseApp.configure()`를 호출합니다.
 
 ## 스플래시와 앱 아이콘 (스컬킹 Android)
 
