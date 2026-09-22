@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_board_core/quick_board_core.dart';
 import '../l10n/app_localizations.dart';
 import '../models/yacht_category.dart';
 import '../models/yacht_state.dart';
@@ -27,29 +26,31 @@ class ScoreScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: YachtColors.background,
-      bottomNavigationBar: const AdBannerWidget(),
       appBar: AppBar(
         title: Text(l.appName),
         backgroundColor: YachtColors.background,
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ScoreSheetTable(
-              state: state,
-              onCategoryTap: (playerIndex, category) =>
-                  _openScoreInput(context, ref, state, playerIndex, category, l),
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            Expanded(
+              child: ScoreSheetTable(
+                state: state,
+                onCategoryTap: (playerIndex, category) => _openScoreInput(
+                    context, ref, state, playerIndex, category, l),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: YachtButton(
-              label: l.endGame,
-              onPressed: () => context.go('/result'),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: YachtButton(
+                label: l.endGame,
+                onPressed: () => context.go('/result'),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

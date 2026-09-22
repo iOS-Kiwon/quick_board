@@ -71,7 +71,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
 
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:quick_board_core/quick_board_core.dart';
 import '../l10n/app_localizations.dart';
 import '../models/yacht_state.dart';
 import '../notifiers/yacht_notifier.dart';
@@ -39,7 +38,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
 
     return Scaffold(
       backgroundColor: YachtColors.background,
-      bottomNavigationBar: const AdBannerWidget(),
       appBar: AppBar(
         title: Text(l.appName),
         backgroundColor: YachtColors.background,
@@ -47,7 +45,6 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       ),
       body: SafeArea(
         top: false,
-        bottom: false,
         child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -134,10 +131,12 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
           ? box.localToGlobal(Offset.zero) & box.size
           : null;
 
-      final result = await Share.shareXFiles(
-        [XFile(file.path, mimeType: 'image/png')],
-        subject: l.appName,
-        sharePositionOrigin: origin,
+      final result = await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path, mimeType: 'image/png')],
+          subject: l.appName,
+          sharePositionOrigin: origin,
+        ),
       );
       debugPrint('[Share] status: ${result.status}');
     } catch (e, st) {

@@ -39,14 +39,28 @@ class _MobileAdBannerState extends State<MobileAdBanner> {
   Future<void> _loadAd() async {
     final authorized = await isTrackingAuthorized();
     if (!mounted) return;
+    debugPrint(
+      '[AdMob] 배너 로드 시작: unitId=$_adUnitId, release=$_isRelease, '
+      'trackingAuthorized=$authorized',
+    );
     _bannerAd = BannerAd(
       adUnitId: _adUnitId,
       request: AdRequest(nonPersonalizedAds: !authorized),
       size: AdSize.banner,
       listener: BannerAdListener(
-        onAdLoaded: (_) => setState(() => _isLoaded = true),
+        onAdLoaded: (ad) {
+          debugPrint(
+            '[AdMob] 배너 로드 성공: '
+            'adapter=${ad.responseInfo?.mediationAdapterClassName}, '
+            'responseId=${ad.responseInfo?.responseId}',
+          );
+          setState(() => _isLoaded = true);
+        },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('[AdMob] 배너 로드 실패: ${error.code} / ${error.message}');
+          debugPrint(
+            '[AdMob] 배너 로드 실패: code=${error.code}, domain=${error.domain}, '
+            'message=${error.message}, responseInfo=${error.responseInfo}',
+          );
           ad.dispose();
           setState(() => _bannerAd = null);
         },

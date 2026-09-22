@@ -68,7 +68,9 @@ void main() {
 
     test('does not advance past round 10', () {
       for (var r = 1; r <= 10; r++) {
-        notifier().updateScore(0, r, PlayerScore(predictedWins: 1, actualWins: 1, bonus: 0, round: r));
+        // 라운드 r에서는 획득승 합계가 r이어야 다음 라운드로 넘어간다.
+        // 매 라운드 합계를 1로 두면 라운드 2에서 멈춘다.
+        notifier().updateScore(0, r, PlayerScore(predictedWins: 1, actualWins: r, bonus: 0, round: r));
         notifier().updateScore(1, r, PlayerScore(predictedWins: 0, actualWins: 0, bonus: 0, round: r));
         notifier().advanceRound();
       }

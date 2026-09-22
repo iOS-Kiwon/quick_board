@@ -35,7 +35,6 @@ class GameScreen extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
